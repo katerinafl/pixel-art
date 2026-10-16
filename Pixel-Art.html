@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)https://www.dona.gr/pixel-art-code.html -->
+<html lang="el"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixel Art</title>
+<style>
+  :root { --bg:#dff1fb; --ink:#1d2b3a; --card:#ffffff; --accent:#ff6f3c; --blue:#2f7fe0; --green:#2ea44f; --red:#e04a4a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif; min-height:100vh; }
+  header { background:var(--card); border-bottom:4px solid var(--ink); padding:12px 20px; display:flex; flex-wrap:wrap; gap:14px 28px; align-items:center; }
+  h1 { margin:0; font-size:28px; letter-spacing:.5px; }
+  .field { display:flex; align-items:center; gap:8px; font-size:20px; font-weight:bold; }
+  input[type=text], input[type=number] { font:inherit; font-size:20px; padding:8px 12px; border:3px solid var(--ink); border-radius:10px; background:#fff; color:var(--ink); }
+  input[type=text] { width:230px; }
+  input[type=number] { width:90px; }
+  input:focus, button:focus-visible { outline:4px solid #ffd23f; outline-offset:2px; }
+  .toolbar { padding:14px 20px 0; display:flex; flex-wrap:wrap; gap:12px; }
+  button { font:inherit; font-size:20px; font-weight:bold; padding:10px 22px; border:3px solid var(--ink); border-radius:12px; cursor:pointer; color:#fff; box-shadow:0 4px 0 var(--ink); }
+  button:active { transform:translateY(3px); box-shadow:0 1px 0 var(--ink); }
+  .new { background:var(--blue); } .clear { background:var(--red); } .save { background:var(--green); }
+  .ghost { background:#fff; color:var(--ink); }
+  main { display:flex; flex-wrap:wrap; gap:24px; padding:20px; align-items:flex-start; }
+  #stage { background:var(--card); border:4px solid var(--ink); border-radius:14px; padding:14px; min-width:300px; min-height:200px; display:flex; align-items:center; justify-content:center; }
+  canvas { display:block; touch-action:none; cursor:crosshair; background:#fff; }
+  #empty { font-size:22px; text-align:center; padding:30px; max-width:340px; line-height:1.4; }
+  #side { background:var(--card); border:4px solid var(--ink); border-radius:14px; padding:14px; }
+  #side h2 { margin:0 0 10px; font-size:20px; }
+  #palette { display:grid; grid-template-columns:repeat(4, 54px); gap:10px; }
+  .sw { width:54px; height:54px; border:3px solid var(--ink); border-radius:10px; padding:0; box-shadow:none; }
+  .sw.sel { outline:5px solid var(--accent); outline-offset:2px; transform:scale(1.06); }
+  #eraser { width:100%; margin-top:14px; font-size:18px; padding:8px; box-shadow:none; }
+  #eraser.sel { background:var(--accent); color:#fff; }
+  #current { margin-top:12px; font-size:16px; display:flex; align-items:center; gap:8px; }
+  #curbox { width:28px; height:28px; border:3px solid var(--ink); border-radius:6px; }
+  #overlay { position:fixed; inset:0; background:rgba(29,43,58,.6); display:none; align-items:center; justify-content:center; padding:20px; z-index:10; }
+  #modal { background:#fff; border:4px solid var(--ink); border-radius:16px; padding:24px; max-width:460px; width:100%; }
+  #modal h3 { margin:0 0 12px; font-size:24px; }
+  #modal p { font-size:19px; line-height:1.4; margin:0 0 14px; }
+  #modal .row { display:flex; gap:20px; align-items:center; font-size:20px; font-weight:bold; margin-bottom:12px; flex-wrap:wrap; }
+  #modal .err { color:var(--red); font-weight:bold; min-height:24px; }
+  #modal .btns { display:flex; gap:12px; justify-content:flex-end; flex-wrap:wrap; }
+  .modes { padding:12px 20px 0; display:flex; gap:10px; flex-wrap:wrap; }
+  .tab { background:#fff; color:var(--ink); box-shadow:none; }
+  .tab.on { background:var(--ink); color:#fff; }
+  .check { background:var(--accent); }
+  #boards { display:flex; flex-direction:row; flex-wrap:wrap; gap:24px; align-items:flex-start; }
+  #refbox { background:var(--card); border:4px solid var(--ink); border-radius:14px; padding:14px; }
+  #refbox .lbl { font-size:18px; font-weight:bold; margin-bottom:8px; }
+  #rcv { cursor:default; }
+  #modal { max-height:90vh; overflow:auto; }
+  .pick { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .pick button { font-size:17px; padding:8px 14px; box-shadow:none; }
+  #confetti { position:fixed; inset:0; pointer-events:none; z-index:20; overflow:hidden; }
+  #confetti i { position:absolute; top:-20px; width:12px; height:18px; animation:fall linear forwards; }
+  @keyframes fall { to { transform:translateY(110vh) rotate(720deg); } }
+  .code { border-collapse:collapse; background:#fff; font-size:22px; }
+  .code th { color:#d32f2f; padding:0 12px; font-size:22px; }
+  .code td { border:1px solid var(--ink); min-width:38px; height:38px; text-align:center; padding:0 4px; }
+  #codebox { overflow:auto; max-width:min(560px, 90vw); max-height:70vh; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎨 Pixel Art</h1>
+  <label class="field">Όνομα: <input type="text" id="name" maxlength="30" autocomplete="off"></label>
+  <label class="field">Τάξη: <input type="text" id="klass" maxlength="10" autocomplete="off"></label>
+</header>
+<nav class="modes">
+  <button class="tab on" data-m="free">✏️ Ελεύθερη δημιουργία</button>
+  <button class="tab" data-m="copy">🖼️ Αντιγραφή εικόνας</button>
+  <button class="tab" data-m="code">🔢 Κωδικοποίηση</button>
+</nav>
+
+<div class="toolbar">
+  <button class="new" id="btnNew">ΝΕΟ</button>
+  <button class="clear" id="btnClear">Καθαρισμός</button>
+  <button class="check" id="btnCheck" hidden="">Έλεγχος</button>
+  <button class="save" id="btnSave">Αποθήκευση</button>
+</div>
+
+<main>
+  <div id="boards"><div id="stage">
+    <div id="empty">Πάτα το κουμπί <b>ΝΕΟ</b> για να φτιάξεις τον καμβά σου!</div>
+    <canvas id="cv" hidden=""></canvas>
+  </div>
+  <div id="refbox" hidden=""><div class="lbl" id="reflbl">Εικόνα για αντιγραφή</div><canvas id="rcv"></canvas><div id="codebox" hidden=""></div></div></div>
+  <div id="side">
+    <h2>Χρώματα</h2>
+    <div id="palette"><button class="sw" aria-label="Χρώμα #000000" data-c="#000000" style="background: rgb(0, 0, 0);"></button><button class="sw" aria-label="Χρώμα #808080" data-c="#808080" style="background: rgb(128, 128, 128);"></button><button class="sw" aria-label="Χρώμα #c0c0c0" data-c="#c0c0c0" style="background: rgb(192, 192, 192);"></button><button class="sw" aria-label="Χρώμα #ffffff" data-c="#ffffff" style="background: rgb(255, 255, 255);"></button><button class="sw sel" aria-label="Χρώμα #e53935" data-c="#e53935" style="background: rgb(229, 57, 53);"></button><button class="sw" aria-label="Χρώμα #fb8c00" data-c="#fb8c00" style="background: rgb(251, 140, 0);"></button><button class="sw" aria-label="Χρώμα #fdd835" data-c="#fdd835" style="background: rgb(253, 216, 53);"></button><button class="sw" aria-label="Χρώμα #7cb342" data-c="#7cb342" style="background: rgb(124, 179, 66);"></button><button class="sw" aria-label="Χρώμα #2e7d32" data-c="#2e7d32" style="background: rgb(46, 125, 50);"></button><button class="sw" aria-label="Χρώμα #00bcd4" data-c="#00bcd4" style="background: rgb(0, 188, 212);"></button><button class="sw" aria-label="Χρώμα #1e88e5" data-c="#1e88e5" style="background: rgb(30, 136, 229);"></button><button class="sw" aria-label="Χρώμα #1a237e" data-c="#1a237e" style="background: rgb(26, 35, 126);"></button><button class="sw" aria-label="Χρώμα #8e24aa" data-c="#8e24aa" style="background: rgb(142, 36, 170);"></button><button class="sw" aria-label="Χρώμα #ec407a" data-c="#ec407a" style="background: rgb(236, 64, 122);"></button><button class="sw" aria-label="Χρώμα #6d4c41" data-c="#6d4c41" style="background: rgb(109, 76, 65);"></button><button class="sw" aria-label="Χρώμα #ffcc99" data-c="#ffcc99" style="background: rgb(255, 204, 153);"></button></div>
+    <button class="ghost" id="eraser">🧽 Γόμα</button>
+    <div id="current">Επιλεγμένο: <span id="curbox" style="background: rgb(229, 57, 53);"></span></div>
+  </div>
+</main>
+
+<div id="overlay"><div id="modal"></div></div>
+
+<script>
+const COLORS = ["#000000","#808080","#c0c0c0","#ffffff","#e53935","#fb8c00","#fdd835","#7cb342",
+                "#2e7d32","#00bcd4","#1e88e5","#1a237e","#8e24aa","#ec407a","#6d4c41","#ffcc99"];
+const MIN = 5, MAX = 32;
+let rows = 0, cols = 0, cells = [], color = COLORS[4], erasing = false, painting = false, cell = 20;
+
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const $ = id => document.getElementById(id);
+
+/* ---------- Παλέτα ---------- */
+const pal = $('palette');
+COLORS.forEach(c => {
+  const b = document.createElement('button');
+  b.className = 'sw'; b.style.background = c; b.setAttribute('aria-label', 'Χρώμα ' + c);
+  b.onclick = () => { color = c; erasing = false; refreshTools(); };
+  b.dataset.c = c; pal.appendChild(b);
+});
+$('eraser').onclick = () => { erasing = true; refreshTools(); };
+function refreshTools() {
+  document.querySelectorAll('.sw').forEach(b => b.classList.toggle('sel', !erasing && b.dataset.c === color));
+  $('eraser').classList.toggle('sel', erasing);
+  $('curbox').style.background = erasing ? '#fff' : color;
+  $('curbox').textContent = erasing ? '🧽' : '';
+}
+refreshTools();
+
+/* ---------- Μοντάλ ---------- */
+function modal(title, html, buttons) {
+  const m = $('modal');
+  m.innerHTML = '<h3></h3>' + html + '<div class="btns"></div>';
+  m.querySelector('h3').textContent = title;
+  const box = m.querySelector('.btns');
+  buttons.forEach(b => {
+    const el = document.createElement('button');
+    el.textContent = b.label; el.className = b.cls || 'ghost';
+    el.onclick = () => { if (b.keep ? b.fn() !== false : true) { if (!b.keep) closeModal(); if (b.fn && !b.keep) b.fn(); } };
+    box.appendChild(el);
+  });
+  $('overlay').style.display = 'flex';
+  const first = m.querySelector('input') || box.lastChild; first && first.focus();
+}
+function closeModal() { $('overlay').style.display = 'none'; }
+function confirmBox(title, text, yesLabel, onYes) {
+  modal(title, '<p>' + text + '</p>', [
+    { label: 'Όχι', cls: 'ghost' },
+    { label: yesLabel, cls: 'clear', fn: onYes }
+  ]);
+}
+const hasWork = () => cells.some(c => c);
+
+/* ---------- ΝΕΟ ---------- */
+$('btnNew').onclick = () => {
+  const go = mode === 'free' ? askSize : askImage;
+  if (hasWork()) confirmBox('Είσαι σίγουρος;', 'Αν φτιάξεις νέο καμβά, θα χαθεί η εικόνα που έχεις τώρα.', 'Ναι, συνέχεια', go);
+  else go();
+};
+function askSize() {
+  modal('Νέος καμβάς',
+    '<p>Πόσα τετραγωνάκια θέλεις; Διάλεξε αριθμό από ' + MIN + ' έως ' + MAX + '.</p>' +
+    '<div class="row"><label>Γραμμές: <input type="number" id="inR" min="' + MIN + '" max="' + MAX + '" value="' + (rows || 10) + '"></label>' +
+    '<label>Στήλες: <input type="number" id="inC" min="' + MIN + '" max="' + MAX + '" value="' + (cols || 15) + '"></label></div>' +
+    '<div class="err" id="err"></div>',
+    [{ label: 'Άκυρο', cls: 'ghost' },
+     { label: 'Δημιουργία', cls: 'new', keep: true, fn: () => {
+        const r = parseInt($('inR').value, 10), c = parseInt($('inC').value, 10);
+        if (!(r >= MIN && r <= MAX && c >= MIN && c <= MAX)) {
+          $('err').textContent = 'Βάλε αριθμούς από ' + MIN + ' έως ' + MAX + '.'; return false;
+        }
+        closeModal(); createGrid(r, c); return true;
+     } }]);
+}
+$('modal').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && $('inR')) { [...$('modal').querySelectorAll('.btns button')].pop().click(); }
+});
+
+function createGrid(r, c) {
+  rows = r; cols = c; cells = new Array(r * c).fill(null);
+  $('empty').hidden = true; cv.hidden = false; draw();
+}
+
+/* ---------- Σχεδίαση ---------- */
+let ML = 0, MT = 0, fs = 12;   // περιθώρια για τους αριθμούς γραμμών/στηλών (μόνο στον editor)
+function calcCell() {
+  const w = Math.max(300, Math.min(window.innerWidth - 390, 820));
+  const h = Math.max(260, window.innerHeight - 290);
+  const fit = (a, b) => Math.max(10, Math.min(40, Math.floor(Math.min(a / cols, b / rows))));
+  let stacked = false;
+  if (mode !== 'free') { cell = fit((window.innerWidth - 430) / 2, h); if (cell < 16) { stacked = true; cell = fit(w, h / 2); } }
+  else cell = fit(w, h);
+  $('boards').style.flexDirection = stacked ? 'column' : 'row';
+}
+function draw() {
+  if (!rows) return;
+  calcCell();
+  render(cv, cells);
+  if (target && mode === 'copy') render(rcv, target);
+}
+function render(cv, cells) {
+  const ctx = cv.getContext('2d');
+  fs = Math.max(9, Math.min(16, cell - 2));
+  ML = Math.round(fs * 2.2); MT = Math.round(fs * 1.7);
+  cv.width = ML + cols * cell; cv.height = MT + rows * cell;
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height);
+  for (let i = 0; i < cells.length; i++) if (cells[i]) {
+    ctx.fillStyle = cells[i]; ctx.fillRect(ML + (i % cols) * cell, MT + Math.floor(i / cols) * cell, cell, cell);
+  }
+  ctx.strokeStyle = '#cfd8dc'; ctx.lineWidth = 1; ctx.beginPath();
+  for (let x = 0; x <= cols; x++) { ctx.moveTo(ML + x * cell + .5, MT); ctx.lineTo(ML + x * cell + .5, MT + rows * cell); }
+  for (let y = 0; y <= rows; y++) { ctx.moveTo(ML, MT + y * cell + .5); ctx.lineTo(ML + cols * cell, MT + y * cell + .5); }
+  ctx.stroke();
+  ctx.fillStyle = '#1d2b3a'; ctx.font = 'bold ' + fs + 'px "Trebuchet MS", Verdana, sans-serif'; ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+  for (let x = 0; x < cols; x++) ctx.fillText(x + 1, ML + x * cell + cell / 2, MT / 2);
+  ctx.textAlign = 'right';
+  for (let y = 0; y < rows; y++) ctx.fillText(y + 1, ML - 6, MT + y * cell + cell / 2 + 1);
+}
+window.addEventListener('resize', draw);
+
+function paint(e) {
+  const rect = cv.getBoundingClientRect();
+  const x = Math.floor(((e.clientX - rect.left) * (cv.width / rect.width) - ML) / cell);
+  const y = Math.floor(((e.clientY - rect.top) * (cv.height / rect.height) - MT) / cell);
+  if (x < 0 || y < 0 || x >= cols || y >= rows) return;
+  const v = erasing ? null : color, i = y * cols + x;
+  if (cells[i] !== v) { cells[i] = v; draw(); }
+}
+cv.addEventListener('pointerdown', e => { painting = true; cv.setPointerCapture(e.pointerId); paint(e); });
+cv.addEventListener('pointermove', e => { if (painting) paint(e); });
+['pointerup', 'pointercancel'].forEach(t => cv.addEventListener(t, () => painting = false));
+
+/* ---------- Λειτουργίες & Αντιγραφή εικόνας ---------- */
+let mode = 'free', target = null;
+const rcv = $('rcv');
+function landscape() {
+  const R = [];
+  for (let y = 0; y < 22; y++) { let r = '';
+    for (let x = 0; x < 24; x++) { let c = '9';
+      if (x >= 18 && x < 22 && y >= 1 && y < 5) c = '6';
+      if ((y == 3 && x >= 3 && x < 8) || (y == 2 && x >= 4 && x < 7)) c = '3';
+      if (y >= 3 && y < 7 && x >= 9 && x < 15) c = '8';
+      if (y >= 7 && y < 12 && x >= 11 && x < 13) c = 'e';
+      if (y >= 12) c = y < 14 ? '7' : ((x * 7 + y * 3) % 11 == 0 ? '1' : 'e');
+      r += c; }
+    R.push(r); }
+  return R;
+}
+// Κάθε γράμμα = χρώμα της παλέτας (0-9, a-f με τη σειρά), τελεία = κενό
+const IMGS = [
+  { n: '❤️ Καρδιά', r: ['.44...44.','4444.4444','444444444','444444444','.4444444.','..44444..','...444...','....4....'] },
+  { n: '🍎 Μήλο', r: ['....e.88.','....e....','.4444444.','443444444','444444444','444444444','.4444444.','..44.44..'] },
+  { n: '🐱 Γατούλα', r: ['55.....55','555...555','555555555','505555505','555555555','555ddd555','.5555555.','..55555..'] },
+  { n: '🌸 Λουλούδι', r: ['...ddddd...','.ddddddddd.','ddd66666ddd','ddd66666ddd','ddd66666ddd','.ddddddddd.','...ddddd...','.....8.....','..88.8.88..','...88888...','.....8.....','.....8.....'] },
+  { n: '💛 Κίτρινο cartoon', r: ['....0000....','...666666...','..66666666..','000000000000','622226622226','623026623026','622226622226','666666666666','666666666666','666600006666','666666666666','aaaaaaaaaaaa','aaaaaaaaaaaa','aaaaaaaaaaaa','.aaaa..aaaa.','.0000..0000.'] },
+  { n: '👾 Εξωγήινος', r: ['..8.....8..','...8...8...','..8888888..','.88.888.88.','88888888888','8.8888888.8','8.8.....8.8','...88.88...'] },
+  { n: '🍓 Φράουλα', r: ['..8888..','.844448.','44444444','44444444','.444444.','.444444.','..4444..','...44...'] },
+  { n: '🤖 Ρομπότ', r: ['.....0.....','.....0.....','....666....','..0000000..','.022222220.','.020220220.','.022222220.','.020000020.','.022222220.','..0000000..','...0...0...','..00...00..','..00...00..'] },
+  { n: '👾 Retro Space Invader', r: [
+    '99999909999999990999999',
+    '99999909999999990999999',
+    '99999909000000090999999',
+    '99999900888888800999999',
+    '99999908888888880999999',
+    '99999088888888888099999',
+    '99990888888888888809999',
+    '99990880088888008809999',
+    '99908880088888008880999',
+    '99908880088888008880999',
+    '99908888888888888880999',
+    '99990888888888888809999',
+    '99990888888888888809999',
+    '99999088888888888099999',
+    '99999908888888880999999',
+    '99999990880000809999999',
+    '99999908809999080099999',
+    '99999908809999088099999',
+    '99999088099999088099999',
+    '99999000099999000099999',
+    '99999999999999999999999',
+    '99999999999999999999999'
+  ] },
+  { n: '😀 Χαμογελαστό emoji', r: [
+    '...............',
+    '.....00000.....',
+    '....0066600....',
+    '...066666660...',
+    '..06666666660..',
+    '.0066066606600.',
+    '.0666066606660.',
+    '.0666666666660.',
+    '.0666666666660.',
+    '.0060666660600.',
+    '..06606660660..',
+    '...066000660...',
+    '....0066600....',
+    '.....00000.....',
+    '...............'
+  ] },
+  { n: '😉 emoji που κλείνει το μάτι', r: [
+    '.....66666.....',
+    '...666666666...',
+    '..66666666666..',
+    '.66666666...66.',
+    '.6666666..0..6.',
+    '66666666.000.66',
+    '66600066..0..66',
+    '660666066...666',
+    '666666666666666',
+    '660000000000066',
+    '.6600dd0dd0066.',
+    '.6660ddddd0666.',
+    '..666ddddd666..',
+    '...66ddddd66...',
+    '.....ddddd.....',
+    '......ddd......'
+  ] },
+  { n: '😎 Cool emoji', r: [
+    '.....00000.....',
+    '...006666600...',
+    '..06666666660..',
+    '.0666666666660.',
+    '.0666666666660.',
+    '000000000000000',
+    '060..0060..0060',
+    '060.00060.00060',
+    '066000666000660',
+    '066666666666660',
+    '.0666666660660.',
+    '.0666600006660.',
+    '..06666666660..',
+    '...006666600...',
+    '.....00000.....'
+  ] },
+  { n: '🌈 Ουράνιο τόξο', r: [
+    '999999999999999999999999999',
+    '999999990004444400099999999',
+    '999999004445555544400999999',
+    '999900445566666665544009999',
+    '999004556677777776655400999',
+    '990045667aaacccaaa766540099',
+    '99045677acc00000cca77654099',
+    '9045567ac099999990ca7655409',
+    '904567ac09999999990ca765409',
+    '9040000c99999999999c0000409',
+    '000033300099999999000333000',
+    '003333330099999990033333300',
+    '033333333099999990333333330',
+    '033333333099999990333333330',
+    '003999930099999990039999300',
+    '990000009999999999900000099',
+    '999999999999999999999999999'
+  ] },
+  { n: '🌷 Λουλούδια στον κήπο', r: [
+    '9999999699699999999',
+    '9aaa999966999aaa999',
+    'aaaaa9996699aaaaa99',
+    '9aaa999699699aaa999',
+    '9994646499999999999',
+    '999444449c6c6c99999',
+    '999944499ccccc99999',
+    '9999444999ccc999999',
+    '9999989999ccc999999',
+    '9999989999989999999',
+    '8998989898989899998',
+    '8898888898888899988',
+    '8889888999888999888',
+    '8888888888888888888'
+  ] },
+  { n: '🎃 Κολοκύθα', r: ['...88....','....8....','..55555..','.5555555.','550555055','500555005','555505555','550555055','.5500055.','..55555..'] },
+  { n: '🌄 Τοπίο με δέντρο', r: landscape() }
+];
+const sizeOf = im => { const m = Math.max(im.r.length, im.r[0].length); return m <= 10 ? 0 : m <= 20 ? 1 : 2; };
+
+function askImage() {
+  const G = ['Μικρά (5×5 – 10×10)', 'Μεσαία (11×11 – 20×20)', 'Μεγάλα (21×21 – 32×32)'];
+  let h = '';
+  G.forEach((g, k) => {
+    h += '<p><b>' + g + '</b></p><div class="pick">';
+    IMGS.forEach((im, i) => { if (sizeOf(im) === k) h += '<button class="ghost" data-i="' + i + '">' + im.n + ' <small>' + im.r[0].length + '×' + im.r.length + '</small></button>'; });
+    h += '</div>';
+  });
+  modal('Διάλεξε εικόνα', h, [{ label: 'Άκυρο', cls: 'ghost' }]);
+  $('modal').querySelectorAll('[data-i]').forEach(b => b.onclick = () => { closeModal(); pick(+b.dataset.i); });
+}
+// Κωδικοποίηση: κάθε γραμμή = ζευγάρια (πόσα διαδοχικά pixel, ποιο χρώμα)
+function showCode(im) {
+  let h = '<table class="code">';
+  im.r.forEach((row, y) => {
+    h += '<tr><th>' + (y + 1) + '</th>';
+    for (let i = 0, j; i < row.length; i = j) {
+      for (j = i; j < row.length && row[j] === row[i]; j++);
+      h += '<td>' + (j - i) + '</td><td style="background:' + (row[i] === '.' ? '#fff' : COLORS[parseInt(row[i], 36)]) + '"></td>';
+    }
+    h += '</tr>';
+  });
+  $('codebox').innerHTML = h + '</table>';
+}
+function pick(i) {
+  const im = IMGS[i];
+  rows = im.r.length; cols = im.r[0].length; cells = new Array(rows * cols).fill(null);
+  target = im.r.join('').split('').map(ch => ch === '.' ? null : COLORS[parseInt(ch, 36)]);
+  const code = mode === 'code';
+  rcv.hidden = code; $('codebox').hidden = !code;
+  $('reflbl').textContent = code ? 'Κώδικας εικόνας: ζωγράφισέ τον στον καμβά' : 'Εικόνα για αντιγραφή';
+  if (code) showCode(im);
+  $('empty').hidden = true; cv.hidden = false; $('refbox').hidden = false; draw();
+}
+function setMode(m) {
+  mode = m; rows = cols = 0; cells = []; target = null;
+  cv.hidden = true; $('refbox').hidden = true; $('empty').hidden = false;
+  $('btnNew').textContent = m === 'free' ? 'ΝΕΟ' : 'Διάλεξε εικόνα';
+  $('btnCheck').hidden = m === 'free';
+  $('empty').innerHTML = m === 'copy' ? 'Πάτα <b>Διάλεξε εικόνα</b> και φτιάξε την ίδια εικόνα στον καμβά σου!' : m === 'code' ? 'Πάτα <b>Διάλεξε εικόνα</b>, διάβασε τον κώδικα και ζωγράφισε την εικόνα που κρύβει!' : 'Πάτα το κουμπί <b>ΝΕΟ</b> για να φτιάξεις τον καμβά σου!';
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.m === m));
+  $('boards').style.flexDirection = 'row';
+}
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  const m = t.dataset.m; if (m === mode) return;
+  if (hasWork()) confirmBox('Είσαι σίγουρος;', 'Αν αλλάξεις λειτουργία, θα χαθεί η εικόνα που έχεις τώρα.', 'Ναι, αλλαγή', () => setMode(m));
+  else setMode(m);
+});
+
+$('btnCheck').onclick = () => {
+  if (!target) { modal('Διάλεξε εικόνα', '<p>Πάτα πρώτα το κουμπί «Διάλεξε εικόνα».</p>', [{ label: 'Εντάξει', cls: 'new' }]); return; }
+  let ok = 0, wrong = 0;
+  cells.forEach((c, i) => { if (c === target[i] || ((c === null || c === '#ffffff') && (target[i] === null || target[i] === '#ffffff'))) ok++; else if (c) { wrong++; cells[i] = null; } });
+  draw();
+  if (ok === cells.length) return win();
+  modal('Σχεδόν!', '<p>Σωστά τα ' + ok + ' από τα ' + cells.length + ' τετραγωνάκια.</p>' +
+    (wrong ? '<p>Έσβησα ' + wrong + ' λάθος. Ξαναβάψε τα!</p>' : '') + '<p>Συνέχισε μέχρι να συμπληρωθεί όλη η εικόνα.</p>',
+    [{ label: 'Συνεχίζω', cls: 'new' }]);
+};
+function win() {
+  modal('Μπράβο!', '<div style="font-size:120px;line-height:1.1;text-align:center;color:var(--green)">✔</div><p style="text-align:center"><b>Η εικόνα σου είναι σωστή!</b></p>',
+    [{ label: 'Άλλη εικόνα', cls: 'new', fn: askImage }, { label: 'Αποθήκευση', cls: 'save', fn: () => $('btnSave').click() }]);
+  confetti();
+}
+function confetti() {
+  const box = document.createElement('div'); box.id = 'confetti';
+  for (let i = 0; i < 80; i++) {
+    const d = document.createElement('i');
+    d.style.cssText = 'left:' + Math.random() * 100 + '%;background:' + COLORS[4 + Math.floor(Math.random() * 10)] + ';animation-delay:' + Math.random() * 1.5 + 's;animation-duration:' + (2 + Math.random() * 2) + 's';
+    box.appendChild(d);
+  }
+  document.body.appendChild(box); setTimeout(() => box.remove(), 5000);
+}
+
+/* ---------- Καθαρισμός ---------- */
+$('btnClear').onclick = () => {
+  if (!rows) return;
+  if (!hasWork()) return;
+  confirmBox('Είσαι σίγουρος;', 'Θα σβηστούν όλα τα χρώματα από τον καμβά.', 'Ναι, καθαρισμός', () => {
+    cells.fill(null); draw();
+  });
+};
+
+/* ---------- Αποθήκευση PNG ---------- */
+$('btnSave').onclick = () => {
+  if (!rows) { modal('Δεν υπάρχει εικόνα', '<p>Πάτα πρώτα το κουμπί ΝΕΟ και φτιάξε την εικόνα σου.</p>', [{ label: 'Εντάξει', cls: 'new' }]); return; }
+  const name = $('name').value.trim(), klass = $('klass').value.trim();
+  if (!name || !klass) {
+    const miss = !name && !klass ? 'το όνομά σου και την τάξη σου' : (!name ? 'το όνομά σου' : 'την τάξη σου');
+    modal('Μην ξεχάσεις!', '<p>Γράψε ' + miss + ' στα πλαίσια πάνω-πάνω, για να φαίνονται στην εικόνα.</p>',
+      [{ label: 'Εντάξει, θα τα γράψω', cls: 'new', fn: () => $(!name ? 'name' : 'klass').focus() }]);
+    return;
+  }
+  savePNG(name, klass);
+};
+function savePNG(name, klass) {
+  const S = Math.max(12, Math.min(40, Math.floor(900 / cols)));   // μέγεθος τετραγώνου στο PNG
+  const iw = cols * S, ih = rows * S, pad = 24, head = 70;
+  const W = Math.max(iw, 360) + pad * 2, H = ih + head + pad * 2;
+  const o = document.createElement('canvas'); o.width = W; o.height = H;
+  const c = o.getContext('2d');
+  c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
+  c.fillStyle = '#1d2b3a'; c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.font = 'bold 28px "Trebuchet MS", Verdana, sans-serif';
+  c.fillText('Όνομα: ' + name + '   Τάξη: ' + klass, W / 2, pad + head / 2, W - pad * 2);
+  const ox = Math.round((W - iw) / 2), oy = pad + head;
+  for (let i = 0; i < cells.length; i++) if (cells[i]) {
+    c.fillStyle = cells[i]; c.fillRect(ox + (i % cols) * S, oy + Math.floor(i / cols) * S, S, S);
+  }
+  o.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'pixelart-' + name.replace(/[\\/:*?"<>|\s]+/g, '_') + '.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }, 'image/png');
+}
+</script>
+
+
+</body></html>
