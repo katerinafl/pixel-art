@@ -2,7 +2,7 @@
 
 Εκπαιδευτική εφαρμογή **pixel art** για μαθητές δημοτικού σχολείου. Τρέχει σε οποιονδήποτε browser, σε ένα μόνο αρχείο HTML, χωρίς εγκατάσταση και χωρίς σύνδεση στο internet.
 
-👉 **Δοκίμασέ την online:** https://ΧΡΗΣΤΗΣ.github.io/ΟΝΟΜΑ-REPO/
+👉 **Δοκίμασέ την online:** https://katerinafl.github.io/pixel-art/
 
 ![Στιγμιότυπο της εφαρμογής](screenshot.png)
 
