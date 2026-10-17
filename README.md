@@ -4,7 +4,6 @@
 
 👉 **Δοκίμασέ την online:** https://katerinafl.github.io/pixel-art/
 
-![Στιγμιότυπο της εφαρμογής](screenshot.png)
 
 ## Τι κάνει
 
