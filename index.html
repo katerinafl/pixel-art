@@ -1,9 +1,32 @@
 <!DOCTYPE html>
-<!-- saved from url=(0039)https://www.dona.gr/pixel-art-code.html -->
-<html lang="el"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<!-- Βασικά -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="author" content="Κατερίνα Φιλιππάκη ΠΕ86">
+<title>Pixel Art – Εκπαιδευτική εφαρμογή για το δημοτικό</title>
+<meta name="description" content="Εκπαιδευτική εφαρμογή pixel art για μαθητές δημοτικού: ελεύθερη δημιουργία, αντιγραφή εικόνας και κωδικοποίηση εικόνων. Δουλεύει σε browser, χωρίς εγκατάσταση.">
+<meta name="keywords" content="pixel art, pixelart, δημοτικό, εκπαιδευτική εφαρμογή, κωδικοποίηση εικόνας, πληροφορική, μαθητές, εργαστήριο πληροφορικής">
+
+<!-- Δημιουργός και άδεια -->
+<meta name="author" content="Κατερίνα Φιλιππάκη">
+<meta name="copyright" content="© 2026 Κατερίνα Φιλιππάκη">
+<meta name="generator" content="Δημιουργήθηκε με τη βοήθεια του Claude (Anthropic)">
+
+<!-- Γλώσσα και ρομπότ αναζήτησης -->
+<meta name="robots" content="index, follow">
+<meta name="language" content="el">
+
+<!-- Εμφάνιση σε κινητό και όταν μοιράζεσαι τον σύνδεσμο (Facebook, Viber, Teams κ.λπ.) -->
+<meta name="theme-color" content="#dff1fb">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pixel Art για το δημοτικό">
+<meta property="og:description" content="Φτιάξε, αντίγραψε και αποκωδικοποίησε εικόνες pixel art.">
+<meta property="og:locale" content="el_GR">
+<meta property="og:url" content="https://katerinafl.github.io/pixel-art/">
+
+<!-- Εικονίδιο στην καρτέλα (emoji, χωρίς αρχείο) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pixel Art</title>
 <style>
   :root { --bg:#dff1fb; --ink:#1d2b3a; --card:#ffffff; --accent:#ff6f3c; --blue:#2f7fe0; --green:#2ea44f; --red:#e04a4a; }
@@ -77,21 +100,21 @@
 <div class="toolbar">
   <button class="new" id="btnNew">ΝΕΟ</button>
   <button class="clear" id="btnClear">Καθαρισμός</button>
-  <button class="check" id="btnCheck" hidden="">Έλεγχος</button>
+  <button class="check" id="btnCheck" hidden>Έλεγχος</button>
   <button class="save" id="btnSave">Αποθήκευση</button>
 </div>
 
 <main>
   <div id="boards"><div id="stage">
     <div id="empty">Πάτα το κουμπί <b>ΝΕΟ</b> για να φτιάξεις τον καμβά σου!</div>
-    <canvas id="cv" hidden=""></canvas>
+    <canvas id="cv" hidden></canvas>
   </div>
-  <div id="refbox" hidden=""><div class="lbl" id="reflbl">Εικόνα για αντιγραφή</div><canvas id="rcv"></canvas><div id="codebox" hidden=""></div></div></div>
+  <div id="refbox" hidden><div class="lbl" id="reflbl">Εικόνα για αντιγραφή</div><canvas id="rcv"></canvas><div id="codebox" hidden></div></div></div>
   <div id="side">
     <h2>Χρώματα</h2>
-    <div id="palette"><button class="sw" aria-label="Χρώμα #000000" data-c="#000000" style="background: rgb(0, 0, 0);"></button><button class="sw" aria-label="Χρώμα #808080" data-c="#808080" style="background: rgb(128, 128, 128);"></button><button class="sw" aria-label="Χρώμα #c0c0c0" data-c="#c0c0c0" style="background: rgb(192, 192, 192);"></button><button class="sw" aria-label="Χρώμα #ffffff" data-c="#ffffff" style="background: rgb(255, 255, 255);"></button><button class="sw sel" aria-label="Χρώμα #e53935" data-c="#e53935" style="background: rgb(229, 57, 53);"></button><button class="sw" aria-label="Χρώμα #fb8c00" data-c="#fb8c00" style="background: rgb(251, 140, 0);"></button><button class="sw" aria-label="Χρώμα #fdd835" data-c="#fdd835" style="background: rgb(253, 216, 53);"></button><button class="sw" aria-label="Χρώμα #7cb342" data-c="#7cb342" style="background: rgb(124, 179, 66);"></button><button class="sw" aria-label="Χρώμα #2e7d32" data-c="#2e7d32" style="background: rgb(46, 125, 50);"></button><button class="sw" aria-label="Χρώμα #00bcd4" data-c="#00bcd4" style="background: rgb(0, 188, 212);"></button><button class="sw" aria-label="Χρώμα #1e88e5" data-c="#1e88e5" style="background: rgb(30, 136, 229);"></button><button class="sw" aria-label="Χρώμα #1a237e" data-c="#1a237e" style="background: rgb(26, 35, 126);"></button><button class="sw" aria-label="Χρώμα #8e24aa" data-c="#8e24aa" style="background: rgb(142, 36, 170);"></button><button class="sw" aria-label="Χρώμα #ec407a" data-c="#ec407a" style="background: rgb(236, 64, 122);"></button><button class="sw" aria-label="Χρώμα #6d4c41" data-c="#6d4c41" style="background: rgb(109, 76, 65);"></button><button class="sw" aria-label="Χρώμα #ffcc99" data-c="#ffcc99" style="background: rgb(255, 204, 153);"></button></div>
+    <div id="palette"></div>
     <button class="ghost" id="eraser">🧽 Γόμα</button>
-    <div id="current">Επιλεγμένο: <span id="curbox" style="background: rgb(229, 57, 53);"></span></div>
+    <div id="current">Επιλεγμένο: <span id="curbox"></span></div>
   </div>
 </main>
 
@@ -487,6 +510,5 @@ function savePNG(name, klass) {
   }, 'image/png');
 }
 </script>
-
-
-</body></html>
+</body>
+</html>
