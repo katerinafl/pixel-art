@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Πρόκληση Πληροφορικής – Δημοτικό Σχολείο</title>
+  <meta name="description" content="Καθημερινό challenge πληκτρολόγησης και pixel art για το μάθημα της Πληροφορικής στο Δημοτικό.">
+  <meta name="theme-color" content="#dff1fb">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
+  <style>
+    :root {
+      --bg: #dff1fb;
+      --ink: #1d2b3a;
+      --card: #ffffff;
+      --accent: #ff6f3c;
+      --blue: #2f7fe0;
+      --green: #2ea44f;
+      --red: #e04a4a;
+      --yellow: #ffd23f;
+      --muted: #52657a;
+      --soft: #f3f9fd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    header {
+      background: var(--card);
+      border-bottom: 4px solid var(--ink);
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 28px);
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-pill {
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: 15px;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-pill.manual {
+      background: #e8f3fc;
+    }
+
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .grade-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--soft);
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      padding: 4px 8px;
+    }
+
+    .grade-selector span {
+      font-size: 14px;
+      font-weight: bold;
+      padding-right: 4px;
+    }
+
+    .grade-btn {
+      font: inherit;
+      font-size: 15px;
+      font-weight: bold;
+      padding: 6px 11px;
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: none;
+      transition: transform 0.1s, background 0.15s;
+    }
+
+    .grade-btn:hover {
+      background: #e3f2fd;
+    }
+
+    .grade-btn.active {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    /* Main Container */
+    main {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1;
+    }
+
+    .card {
+      background: var(--card);
+      border: 4px solid var(--ink);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 5px 0 var(--ink);
+    }
+
+    /* Challenge Header Bar */
+    .challenge-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 3px dashed #cbd8e4;
+    }
+
+    .challenge-title {
+      font-size: clamp(20px, 2.5vw, 24px);
+      font-weight: bold;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-rule {
+      font-size: 14px;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-weight: bold;
+    }
+
+    .badge-rule.strict {
+      background: #fff3e0;
+      color: #e65100;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: var(--soft);
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      padding: 6px 14px;
+      font-size: 17px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Buttons */
+    button.action-btn {
+      font: inherit;
+      font-size: 19px;
+      font-weight: bold;
+      padding: 10px 22px;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      cursor: pointer;
+      color: #fff;
+      box-shadow: 0 4px 0 var(--ink);
+      transition: transform 0.08s, box-shadow 0.08s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button.action-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--ink);
+    }
+
+    button.action-btn:focus-visible,
+    input:focus-visible {
+      outline: 4px solid var(--yellow);
+      outline-offset: 2px;
+    }
+
+    .btn-check { background: var(--accent); }
+    .btn-clear { background: var(--red); }
+    .btn-blue  { background: var(--blue); }
+    .btn-green { background: var(--green); }
+    .btn-ghost { background: #fff; color: var(--ink); }
+
+    /* Typing Challenge Styles */
+    .typing-block {
+      background: var(--soft);
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 18px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .typing-block.completed {
+      background: #eafaf1;
+      border-color: var(--green);
+    }
+
+    .lang-tag {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .target-sentence {
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: bold;
+      line-height: 1.5;
+      letter-spacing: 0.5px;
+      background: #fff;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      user-select: none;
+      word-wrap: break-word;
+    }
+
+    .char-ok {
+      color: #1b7a37;
+      background: #dcfce7;
+      border-radius: 3px;
+    }
+
+    .char-err {
+      color: #b91c1c;
+      background: #fecaca;
+      border-bottom: 3px solid #dc2626;
+      border-radius: 3px;
+    }
+
+    .char-pending {
+      color: var(--ink);
+    }
+
+    .input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .typing-input {
+      flex: 1;
+      min-width: 240px;
+      font: inherit;
+      font-size: clamp(20px, 2.5vw, 26px);
+      font-weight: bold;
+      padding: 12px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .typing-input.has-error {
+      border-color: var(--red);
+      background: #fff5f5;
+    }
+
+    .typing-input.is-valid {
+      border-color: var(--green);
+      background: #f0fdf4;
+    }
+
+    .feedback-msg {
+      margin-top: 10px;
+      font-size: 17px;
+      font-weight: bold;
+      min-height: 24px;
+    }
+
+    .feedback-msg.err { color: var(--red); }
+    .feedback-msg.ok  { color: var(--green); }
+
+    /* Pixel Art Challenge Styles (Grade A) */
+    .pixel-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .boards-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .board-box {
+      background: var(--soft);
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .board-label {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background: #fff;
+      border: 2px solid #b0bec5;
+      border-radius: 6px;
+      touch-action: none;
+    }
+
+    #userCanvas {
+      cursor: crosshair;
+    }
+
+    #refCanvas {
+      cursor: default;
+    }
+
+    .pixel-tools {
+      background: var(--soft);
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      padding: 16px;
+      min-width: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .pixel-tools h3 {
+      margin: 0;
+      font-size: 19px;
+      text-align: center;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 56px);
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .swatch {
+      width: 56px;
+      height: 56px;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.1s;
+    }
+
+    .swatch.selected {
+      outline: 5px solid var(--accent);
+      outline-offset: 2px;
+      transform: scale(1.07);
+    }
+
+    .eraser-btn {
+      font: inherit;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .eraser-btn.selected {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .pixel-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .pixel-actions button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* Success Banner (Inline & Persistent) */
+    .success-banner {
+      display: none;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #fffbeb 0%, #dcfce7 100%);
+      border: 4px solid var(--green);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .success-banner.show {
+      display: block;
+    }
+
+    .stars-row {
+      font-size: 46px;
+      line-height: 1.1;
+      margin-bottom: 6px;
+      letter-spacing: 6px;
+    }
+
+    .success-banner h2 {
+      margin: 4px 0 8px;
+      font-size: 28px;
+      color: #15803d;
+    }
+
+    .success-banner p {
+      margin: 0;
+      font-size: 19px;
+      font-weight: bold;
+      color: var(--ink);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Confetti */
+    #confettiLayer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      top: -20px;
+      width: 12px;
+      height: 18px;
+      border-radius: 3px;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+      }
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 10px 14px;
+      }
+      main {
+        padding: 12px;
+      }
+      .card {
+        padding: 14px;
+      }
+      .grade-btn {
+        padding: 6px 9px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>💻 Πρόκληση Πληροφορικής</h1>
+    <div id="scheduleBadge" class="status-pill">⏳ Έλεγχος ώρας...</div>
+  </div>
+
+  <div class="controls-bar">
+    <div class="grade-selector" role="group" aria-label="Επιλογή τάξης">
+      <span>Τάξη:</span>
+      <button type="button" class="grade-btn" data-grade="Α">Α΄</button>
+      <button type="button" class="grade-btn" data-grade="Β">Β΄</button>
+      <button type="button" class="grade-btn" data-grade="Γ">Γ΄</button>
+      <button type="button" class="grade-btn" data-grade="Δ">Δ΄</button>
+      <button type="button" class="grade-btn" data-grade="Ε">Ε΄</button>
+      <button type="button" class="grade-btn" data-grade="ΣΤ">ΣΤ΄</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card" id="challengeCard">
+    <div class="challenge-top">
+      <div>
+        <h2 class="challenge-title" id="challengeHeading">Φόρτωση πρόκλησης...</h2>
+        <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <span id="dateContextText" style="font-size:15px; font-weight:bold; color:var(--muted);"></span>
+          <span id="ruleBadge" class="badge-rule"></span>
+        </div>
+      </div>
+
+      <div class="stats-row" id="statsContainer">
+        <div class="stat-box" title="Χρόνος">⏱️ <span id="timerDisplay">00:00</span></div>
+        <div class="stat-box" id="wpmBox" title="Λέξεις ανά λεπτό">⚡ <span id="wpmDisplay">0</span> λ/λ</div>
+      </div>
+    </div>
+
+    <!-- Περιοχή Πληκτρολόγησης (Β΄ - ΣΤ΄) -->
+    <div id="typingArea" hidden></div>
+
+    <!-- Περιοχή Pixel Art (Α΄ Τάξη) -->
+    <div id="pixelArea" hidden>
+      <div class="pixel-layout">
+        <div class="boards-wrap">
+          <div class="board-box">
+            <div class="board-label">✏️ Ο καμβάς σου</div>
+            <canvas id="userCanvas"></canvas>
+          </div>
+          <div class="board-box">
+            <div class="board-label" id="refTitle">🎨 Αντίγραψε: Εικόνα</div>
+            <canvas id="refCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="pixel-tools">
+          <h3>🎨 Χρώματα</h3>
+          <div class="palette-grid" id="pixelPalette"></div>
+          <button type="button" class="eraser-btn" id="pixelEraser">🧽 Γόμα</button>
+          <div id="pixelFeedback" class="feedback-msg" style="text-align:center;"></div>
+          <div class="pixel-actions">
+            <button type="button" class="action-btn btn-check" id="pixelCheckBtn">✅ Έλεγχος</button>
+            <button type="button" class="action-btn btn-clear" id="pixelClearBtn">🗑️ Καθαρισμός</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Μήνυμα Επιτυχίας (παραμένει ανοιχτό) -->
+    <div id="successBanner" class="success-banner" role="status" aria-live="polite">
+      <div class="stars-row">⭐⭐⭐</div>
+      <h2 id="successTitle">Μπράβο! Τα κατάφερες!</h2>
+      <p id="successDetails"></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Εργαστήριο Πληροφορικής Δημοτικού • Κάθε εβδομάδα μια νέα πρόκληση!
+</footer>
+
+<script>
+/* ==========================================================================
+   1. ΔΕΔΟΜΕΝΑ ΠΡΟΓΡΑΜΜΑΤΟΣ & ΩΡΑΡΙΟΥ
+   ========================================================================== */
+const PERIODS = [
+  { num: 1, label: "1η ώρα", startMin: 8 * 60 + 10, endMin: 9 * 60 + 0 },   // 08:10 - 09:00 (έναρξη 08:15)
+  { num: 2, label: "2η ώρα", startMin: 8 * 60 + 55, endMin: 9 * 60 + 40 },  // 08:55 - 09:40 (έναρξη 09:00)
+  { num: 3, label: "3η ώρα", startMin: 9 * 60 + 55, endMin: 10 * 60 + 45 }, // 09:55 - 10:45 (έναρξη 10:00)
+  { num: 4, label: "4η ώρα", startMin: 10 * 60 + 40, endMin: 11 * 60 + 30 },// 10:40 - 11:30 (έναρξη 10:45)
+  { num: 5, label: "5η ώρα", startMin: 11 * 60 + 40, endMin: 12 * 60 + 25 },// 11:40 - 12:25 (έναρξη 11:45)
+  { num: 6, label: "6η ώρα", startMin: 12 * 60 + 30, endMin: 13 * 60 + 15 } // 12:30 - 13:15 (έναρξη 12:35)
+];
+
+// Ημέρες εβδομάδας JS: 1=Δευτέρα, 2=Τρίτη, 3=Τετάρτη, 4=Πέμπτη, 5=Παρασκευή
+const TIMETABLE = {
+  1: { 1: "Β", 2: "Ε", 4: "ΣΤ", 6: "Γ" },
+  2: { 4: "ΣΤ", 6: "Α" },
+  3: { 4: "Δ", 6: "Γ" },
+  4: { 5: "Α", 6: "Ε" },
+  5: { 5: "Β" }
+};
+
+const MONTH_KEYS = [
+  "january", "february", "march", "april", "may", "june",
+  "june", "june", "september", "october", "november", "december"
+];
+
+const MONTH_NAMES_EL = {
+  september: "Σεπτέμβριος",
+  october: "Οκτώβριος",
+  november: "Νοέμβριος",
+  december: "Δεκέμβριος",
+  january: "Ιανουάριος",
+  february: "Φεβρουάριος",
+  march: "Μάρτιος",
+  april: "Απρίλιος",
+  may: "Μάιος",
+  june: "Ιούνιος"
+};
+
+/* ==========================================================================
+   2. ΠΡΟΤΑΣΕΙΣ ΠΛΗΚΤΡΟΛΟΓΗΣΗΣ ΑΝΑ ΤΑΞΗ ΚΑΙ ΜΗΝΑ
+   ========================================================================== */
+const TYPING_DATA = {
+  "Β": {
+    september: [
+      "Η γάτα παίζει.",
+      "Ο ήλιος λάμπει.",
+      "Το σκυλί τρέχει."
+    ],
+    october: [
+      "Η μαμά μαγειρεύει.",
+      "Το μήλο είναι κόκκινο.",
+      "Ο μπαμπάς διαβάζει εφημερίδα."
+    ],
+    november: [
+      "Βρέχει πολύ σήμερα.",
+      "Φοράω το μπουφάν μου.",
+      "Η δασκάλα μάς λέει ένα παραμύθι."
+    ],
+    december: [
+      "Το δέντρο έχει πολλά φωτάκια.",
+      "Έρχονται τα Χριστούγεννα, και χαίρομαι.",
+      "Ο Άγιος Βασίλης φέρνει δώρα."
+    ],
+    january: [
+      "Σήμερα έχουμε μάθημα στον υπολογιστή.",
+      "Μου αρέσει το χιόνι, γιατί παίζουμε έξω.",
+      "Η νέα χρονιά ξεκίνησε, και είμαστε χαρούμενοι."
+    ],
+    february: [
+      "Το καρναβάλι έρχεται, και θα ντυθώ πειρατής.",
+      "Ποιο ζώο σου αρέσει περισσότερο;",
+      "Έφτιαξα μια μάσκα με χαρτί και χρώματα."
+    ],
+    march: [
+      "Η άνοιξη ήρθε, και ανθίζουν τα λουλούδια!",
+      "Στις 25 Μαρτίου κάνουμε γιορτή στο σχολείο.",
+      "Τι καιρό κάνει σήμερα;"
+    ],
+    april: [
+      "Το Πάσχα βάφουμε κόκκινα αυγά, και τα τσουγκρίζουμε.",
+      "Μπράβο! Έγραψες χωρίς λάθος.",
+      "Θα πάμε εκδρομή στο χωριό, με τους παππούδες μου."
+    ],
+    may: [
+      "Ο Μάιος μυρίζει λουλούδια, και τα πουλιά κελαηδούν!",
+      "Ποιο είναι το αγαπημένο σου μάθημα, και γιατί;",
+      "Σε λίγες μέρες κλείνει το σχολείο, και θα παίζουμε όλη μέρα!"
+    ],
+    june: [
+      "Το καλοκαίρι πάμε στη θάλασσα, παίζουμε και κολυμπάμε!",
+      "Ποιο είναι το αγαπημένο σου παιχνίδι;",
+      "Ευχαριστώ, δασκάλα! Πέρασα υπέροχα φέτος."
+    ]
+  },
+
+  "Γ": {
+    september: [
+      "Ο υπολογιστής έχει οθόνη και πληκτρολόγιο.",
+      "Το ποντίκι κινεί τον δείκτη.",
+      "Κάθομαι σωστά και κοιτάζω την οθόνη."
+    ],
+    october: [
+      "Τα δάχτυλά μου ξέρουν πού είναι τα πλήκτρα.",
+      "Το φθινόπωρο πέφτουν τα φύλλα από τα δέντρα.",
+      "Η Μαρία και ο Νίκος παίζουν στην αυλή."
+    ],
+    november: [
+      "Σήμερα το πρωί έβρεχε, αλλά τώρα έχει ήλιο.",
+      "Το πλήκτρο Enter αλλάζει γραμμή.",
+      "Στην Κρήτη η ελιά είναι πολύτιμο δέντρο."
+    ],
+    december: [
+      "Τα παιδιά στολίζουν το δέντρο, και τραγουδούν κάλαντα.",
+      "Στο χιόνι φτιάχνουμε έναν μεγάλο χιονάνθρωπο!",
+      "Τι δώρο θα ζητήσεις από τον Άγιο Βασίλη;"
+    ],
+    january: [
+      "Τα παιδιά μαθαίνουν να πληκτρολογούν σωστά, χωρίς να κοιτούν τα πλήκτρα.",
+      "Πόσες λέξεις μπορείς να γράψεις σε ένα λεπτό;",
+      "Το νέο έτος φέρνει νέες ευκαιρίες για μάθηση."
+    ],
+    february: [
+      "Το Σάββατο θα ντυθούμε καρναβαλιστές, και θα χορέψουμε!",
+      "Η πληροφορική είναι ένα διασκεδαστικό μάθημα, όταν δουλεύουμε όλοι μαζί.",
+      "Ποιος έφτιαξε αυτό το πρόγραμμα, και πώς λειτουργεί;"
+    ],
+    march: [
+      "Η 25η Μαρτίου είναι εθνική γιορτή της Ελλάδας.",
+      "Η άνοιξη φέρνει χρώματα, μυρωδιές και πολλά πουλιά!",
+      "Πάτησε το πλήκτρο Shift, για να γράψεις κεφαλαίο γράμμα."
+    ],
+    april: [
+      "Το Πάσχα ανάβουμε λαμπάδες, και τρώμε τσουρέκι με την οικογένεια.",
+      "Έχεις γράψει σωστά: τόνους, κόμματα και κεφαλαία;",
+      "Οι μέλισσες μαζεύουν νέκταρ από τα λουλούδια της άνοιξης."
+    ],
+    may: [
+      "Όσο περισσότερο εξασκείσαι, τόσο πιο γρήγορα γράφεις!",
+      "Ο Μάιος είναι ο μήνας των λουλουδιών, των ρόδων και των παπαρουνών.",
+      "Πρέπει να προσέχουμε τα σημεία στίξης: τελεία, κόμμα, ερωτηματικό."
+    ],
+    june: [
+      "Όταν έρθει το καλοκαίρι, θα παίζουμε έξω μέχρι αργά το βράδυ!",
+      "Φέτος μάθαμε πολλά πράγματα, και περάσαμε υπέροχα μαζί.",
+      "Καλές διακοπές σε όλους! Θα τα πούμε τον Σεπτέμβριο."
+    ]
+  },
+
+  "Δ": {
+    september: [
+      "Η πληροφορική μας βοηθά να μαθαίνουμε νέα πράγματα.",
+      "Κάθε πλήκτρο έχει τη δική του δουλειά.",
+      "Στο εργαστήριο δουλεύουμε με προσοχή και σεβασμό."
+    ],
+    october: [
+      "Ένας υπολογιστής έχει επεξεργαστή, μνήμη και σκληρό δίσκο.",
+      "Σήμερα είναι 15 Οκτωβρίου, και το μάθημα αρχίζει στις 8:15.",
+      "Με το πλήκτρο Backspace σβήνουμε το τελευταίο γράμμα."
+    ],
+    november: [
+      "Το σχολείο ανοίγει στις 8:15 και κλείνει στις 13:15.",
+      "Μην μοιράζεσαι ποτέ τον κωδικό σου με άλλους!",
+      "Η τάξη μας έχει 22 μαθητές και 18 υπολογιστές."
+    ],
+    december: [
+      "Ο κωδικός πρόσβασης πρέπει να είναι δύσκολος, αλλά εύκολος να τον θυμάσαι.",
+      "Έχουμε 12 μέρες μέχρι τα Χριστούγεννα: μετράμε αντίστροφα!",
+      "Ο Άγιος Βασίλης έχει 1 έλκηθρο και 9 ταράνδους."
+    ],
+    january: [
+      "Το 2027 ξεκινά με νέους στόχους - και με νέες ιδέες!",
+      "Ένα byte έχει 8 bits, και ένα bit είναι 0 ή 1.",
+      "Για να μάθεις καλά, πρέπει να εξασκείσαι κάθε μέρα (έστω 10 λεπτά)."
+    ],
+    february: [
+      "Το καρναβάλι της Πάτρας είναι από τα μεγαλύτερα στην Ελλάδα!",
+      "Αν έχω 5 μήλα και φάω τα 2, μου μένουν 3.",
+      "Ο υπολογιστής καταλαβαίνει μόνο 0 και 1 - δηλαδή το δυαδικό σύστημα."
+    ],
+    march: [
+      "Το 1821 οι Έλληνες ξεκίνησαν την Επανάσταση για την ελευθερία τους.",
+      "Ποια είναι η διαφορά ανάμεσα στο ποντίκι και στο πληκτρολόγιο;",
+      "Ο αλγόριθμος είναι οδηγίες βήμα προς βήμα, όπως μια συνταγή."
+    ],
+    april: [
+      "Οι πράξεις γράφονται έτσι: 12 + 8 = 20 και 20 - 8 = 12.",
+      "Η ημερομηνία 23/4/2027 γράφεται ημέρα/μήνας/έτος.",
+      "Το ηλεκτρονικό ταχυδρομείο στέλνει μηνύματα, φωτογραφίες και αρχεία."
+    ],
+    may: [
+      "Η μνήμη του υπολογιστή μετριέται σε MB και GB (π.χ. 8 GB).",
+      "Γράφω γρήγορα, αλλά πρώτα προσέχω να γράφω σωστά!",
+      "Με ταχύτητα 40 λέξεις/λεπτό, γράφουμε 2.400 λέξεις σε μία ώρα."
+    ],
+    june: [
+      "Αν 3 + 4 = 7, τότε 7 - 4 = 3 (σωστά;).",
+      "Σήμερα έχει 32 βαθμούς Κελσίου: κάνει πολλή ζέστη!",
+      "Το σχολείο τελειώνει στις 15 Ιουνίου: καλό καλοκαίρι σε όλους!"
+    ]
+  },
+
+  "Ε": {
+    september: {
+      el: [
+        "Το διαδίκτυο συνδέει εκατομμύρια υπολογιστές σε όλο τον κόσμο.",
+        "Ο υπολογιστής μας βοηθά να μαθαίνουμε.",
+        "Στο εργαστήριο κάθομαι σωστά και προσέχω την οθόνη."
+      ],
+      en: [
+        "The quick brown fox jumps over the lazy dog.",
+        "I like my school.",
+        "My computer has a big screen."
+      ]
+    },
+    october: {
+      el: [
+        "Το λογισμικό είναι τα προγράμματα, και το υλικό είναι τα εξαρτήματα.",
+        "Σήμερα θα μάθω να γράφω γρήγορα, χωρίς να κοιτώ το πληκτρολόγιο.",
+        "Η μνήμη RAM κρατά προσωρινά τα προγράμματα που τρέχουν."
+      ],
+      en: [
+        "The cat sits on the keyboard.",
+        "Today is a sunny day, and we are happy.",
+        "Good morning, teacher! Hello, class!"
+      ]
+    },
+    november: {
+      el: [
+        "Ο αλγόριθμος είναι μια σειρά από βήματα που λύνουν ένα πρόβλημα.",
+        "Ένας ισχυρός κωδικός έχει γράμματα, αριθμούς και σύμβολα.",
+        "Πριν στείλεις ένα μήνυμα, σκέψου αν είναι ευγενικό."
+      ],
+      en: [
+        "Computers follow instructions, step by step.",
+        "My favorite color is blue, and I love pizza.",
+        "What is your name, and how old are you?"
+      ]
+    },
+    december: {
+      el: [
+        "Το Scratch είναι μια γλώσσα προγραμματισμού με χρωματιστά μπλοκ.",
+        "Τα Χριστούγεννα στέλνουμε ευχές με e-mail, αλλά και με κάρτες.",
+        "Μια εφαρμογή (app) είναι ένα πρόγραμμα για το κινητό ή το tablet."
+      ],
+      en: [
+        "Santa Claus comes in December, and he brings gifts!",
+        "It is cold outside, so I wear a hat and gloves.",
+        "Merry Christmas and a happy new year!"
+      ]
+    },
+    january: {
+      el: [
+        "Το νέο έτος, 2027, φέρνει νέες ευκαιρίες να μάθουμε προγραμματισμό.",
+        "Ένα αρχείο έχει όνομα και κατάληξη, π.χ. zografia.png.",
+        "Το bit είναι η μικρότερη μονάδα πληροφορίας: 0 ή 1."
+      ],
+      en: [
+        "A new year is a new start: let's learn something new!",
+        "I can type fast, but I must type correctly.",
+        "The internet connects people all over the world."
+      ]
+    },
+    february: {
+      el: [
+        "Ο χρήστης πρέπει να προστατεύει τα προσωπικά του στοιχεία στο διαδίκτυο.",
+        "Το καρναβάλι έχει μουσική, χορό και πολλή φαντασία!",
+        "Για να αντιγράψεις κείμενο πατάς Ctrl + C, και για να το επικολλήσεις Ctrl + V."
+      ],
+      en: [
+        "Do you want to play a game after school?",
+        "My best friend lives near the park, and we play there.",
+        "Please don't share your password with anyone!"
+      ]
+    },
+    march: {
+      el: [
+        "Το 1821 είναι χρονιά-ορόσημο για την ιστορία της Ελλάδας.",
+        "Ένας βρόχος (loop) επαναλαμβάνει το ίδιο κομμάτι κώδικα πολλές φορές.",
+        "Η ψηφιακή μας ταυτότητα φαίνεται από ό,τι δημοσιεύουμε."
+      ],
+      en: [
+        "Spring is here: the flowers are blooming, and the birds are singing!",
+        "I have 3 pens, 5 pencils & 1 eraser.",
+        "How many letters are there in the English alphabet?"
+      ]
+    },
+    april: {
+      el: [
+        "Μια μηχανή αναζήτησης, όπως η Google, βρίσκει σελίδες σε δευτερόλεπτα.",
+        "Αν 15 * 4 = 60, τότε 60 / 4 = 15.",
+        "Οι πηγές πρέπει να ελέγχονται: δεν είναι όλα όσα διαβάζουμε αλήθεια!"
+      ],
+      en: [
+        "A strong password has letters, numbers & symbols!",
+        "Wait... is it Monday or Tuesday today?",
+        "My sister's name is Anna, and she's 9 years old."
+      ]
+    },
+    may: {
+      el: [
+        "Το e-mail της Μαρίας είναι maria_2027@example.com - το έγραψες σωστά;",
+        "Η ταχύτητα πληκτρολόγησης μετριέται σε λέξεις ανά λεπτό (WPM).",
+        "Ο προγραμματιστής γράφει κώδικα, τον δοκιμάζει και διορθώνει τα λάθη (bugs)."
+      ],
+      en: [
+        "Hello, my name is Alex & I'm 11 years old!",
+        "I'm learning to code, and it's really fun :)",
+        "Email me at alex_2027@example.com, please."
+      ]
+    },
+    june: {
+      el: [
+        "Φέτος γράψαμε, ζωγραφίσαμε και προγραμματίσαμε: ήταν μια υπέροχη χρονιά!",
+        "Πρώτα σκέψου, μετά γράψε, και στο τέλος έλεγξε το αποτέλεσμα!",
+        "Καλό καλοκαίρι! Μην ξεχάσεις να εξασκείσαι: 10 λεπτά τη μέρα αρκούν."
+      ],
+      en: [
+        "Summer is coming: the beach, the sun & ice cream!",
+        "Thank you for a great year, teacher!",
+        "See you in September, and have a wonderful summer!"
+      ]
+    }
+  },
+
+  "ΣΤ": {
+    september: {
+      el: [
+        "Ένας καλός προγραμματιστής σκέφτεται πρώτα και γράφει κώδικα μετά.",
+        "Ο επεξεργαστής είναι ο εγκέφαλος του υπολογιστή και εκτελεί εντολές.",
+        "Στο εργαστήριο δουλεύουμε με προσοχή, και σεβόμαστε τον εξοπλισμό."
+      ],
+      en: [
+        "Practice makes perfect, so keep typing every day.",
+        "A good programmer thinks first and writes code later.",
+        "The mouse and the keyboard are input devices."
+      ]
+    },
+    october: {
+      el: [
+        "Μια μεταβλητή κρατά μια τιμή, π.χ. τους πόντους σε ένα παιχνίδι.",
+        "Το λειτουργικό σύστημα (Windows, macOS, Linux) διαχειρίζεται τον υπολογιστή.",
+        "Οι υπολογιστές συνδέονται σε δίκτυο με καλώδια ή ασύρματα (Wi-Fi)."
+      ],
+      en: [
+        "A variable stores a value, like a score in a game.",
+        "A computer screen is an output device, but a touch screen is both.",
+        "Wi-Fi lets us connect to the internet without cables."
+      ]
+    },
+    november: {
+      el: [
+        "Μια συνθήκη ελέγχει κάτι: αν βρέχει, τότε παίρνουμε ομπρέλα.",
+        "Το phishing είναι απάτη: σου ζητούν κωδικούς, προσποιούμενοι κάποιον άλλον.",
+        "Ο υπολογιστής αποθηκεύει εικόνες, μουσική και κείμενα σε αρχεία και φακέλους."
+      ],
+      en: [
+        "If it rains, then I take an umbrella; otherwise, I wear sunglasses.",
+        "Never share your personal information with strangers online!",
+        "Phishing messages try to trick you into giving your password."
+      ]
+    },
+    december: {
+      el: [
+        "Η χρονιά προχωρά: έφτιαξες 12 έργα, 3 παιχνίδια και 1 ιστορία!",
+        "Ο δυαδικός αριθμός 101 ισούται με το 5 στο δεκαδικό σύστημα.",
+        "Πριν δημοσιεύσεις μια φωτογραφία, ρώτα τους γονείς σου: είναι προσωπικό δεδομένο!"
+      ],
+      en: [
+        "The binary number 101 is equal to 5 in the decimal system.",
+        "This year I created 12 projects, 3 games & 1 story!",
+        "Winter break is near: relax, read & play outside!"
+      ]
+    },
+    january: {
+      el: [
+        "Το 2027 θα είναι χρονιά ανακαλύψεων: ρομπότ, τεχνητή νοημοσύνη και διάστημα!",
+        "Μια εξίσωση: x + 7 = 12, άρα x = 5.",
+        "Ένα πρόγραμμα με σφάλμα (bug) πρέπει να ελεγχθεί και να διορθωθεί."
+      ],
+      en: [
+        "A strong password has letters, numbers & symbols!",
+        "Artificial intelligence learns from data, but it can make mistakes.",
+        "Happy New Year 2027! Let's code something amazing."
+      ]
+    },
+    february: {
+      el: [
+        "Η ευγένεια ισχύει και στο διαδίκτυο: δεν γράφουμε ποτέ προσβλητικά σχόλια!",
+        "Ένα pixel είναι ένα μικροσκοπικό τετράγωνο: χιλιάδες pixels φτιάχνουν μια εικόνα.",
+        "Το 25% των 80 μαθητών είναι 20 μαθητές."
+      ],
+      en: [
+        "Be kind online: don't write mean comments, ever!",
+        "25% of 80 = 20, isn't it? Yes: [20] is correct!",
+        "One pixel is tiny, but thousands of pixels make a picture."
+      ]
+    },
+    march: {
+      el: [
+        "Το 1821 άλλαξε τον ρου της ιστορίας: η Ελλάδα διεκδίκησε την ελευθερία της!",
+        "Ένας βρόχος επανάληψης (for) τρέχει 10 φορές: 1, 2, 3, ... 10.",
+        "Ο αλγόριθμος αναζήτησης ελέγχει κάθε στοιχείο της λίστας, ένα-ένα."
+      ],
+      en: [
+        "A loop repeats the same instructions: 1, 2, 3 ... 10.",
+        "Search engines find pages by looking at keywords, links & more.",
+        "Debugging means finding and fixing errors (bugs) in a program."
+      ]
+    },
+    april: {
+      el: [
+        "Η τεχνητή νοημοσύνη (AI) μαθαίνει από δεδομένα, αλλά μπορεί να κάνει λάθη!",
+        "Σκέψου κριτικά: ποιος έγραψε αυτή την πληροφορία, και πού βασίζεται;",
+        "Το Ctrl + S αποθηκεύει, το Ctrl + Z αναιρεί, και το Ctrl + A επιλέγει τα πάντα."
+      ],
+      en: [
+        "Ctrl + S saves, Ctrl + Z undoes, and Ctrl + A selects everything.",
+        "Who wrote this information, and can I trust the source?",
+        "A weak password is Dog123, but D0g!Runs#Fast_42 is much stronger."
+      ]
+    },
+    may: {
+      el: [
+        "Ο προγραμματιστής χρειάζεται υπομονή, επιμονή & φαντασία!",
+        "Το αρχείο ergasia_ST.docx αποθηκεύτηκε στον φάκελο Έγγραφα.",
+        "Η ταχύτητα και η ακρίβεια είναι και τα δύο σημαντικά: 30 σωστές λέξεις νικούν 40 λάθος!"
+      ],
+      en: [
+        "A programmer needs patience, curiosity & a lot of practice!",
+        "Typing speed is measured in WPM (words per minute): aim for 30+.",
+        "Please send the file to: teacher_it@example.com by Friday."
+      ]
+    },
+    june: {
+      el: [
+        "Φέτος μάθαμε πολλά: πληκτρολόγηση, αλγόριθμους, ασφάλεια και δημιουργία!",
+        "Μπράβο σου! Η εξάσκηση ΔΕΝ τελειώνει ποτέ: συνέχισε και το καλοκαίρι.",
+        "Καλή συνέχεια στο Γυμνάσιο, και καλά ταξίδια στον κόσμο της τεχνολογίας!"
+      ],
+      en: [
+        "This year we learned to type, code, draw & stay safe online!",
+        "Thank you for a wonderful year; you did an amazing job (100%)!",
+        "Have a great summer, and keep learning: the best is yet to come!"
+      ]
+    }
+  }
+};
+
+/* ==========================================================================
+   3. ΔΕΔΟΜΕΝΑ PIXEL ART ΓΙΑ Α΄ ΤΑΞΗ (30 ΕΙΚΟΝΕΣ, 3 ΑΝΑ ΜΗΝΑ)
+   Κωδικοί χρωμάτων:
+   R: #e53935 (Κόκκινο), B: #1e88e5 (Μπλε), Y: #fdd835 (Κίτρινο),
+   G: #2e7d32 (Πράσινο), O: #fb8c00 (Πορτοκαλί), P: #ec407a (Ροζ),
+   C: #00bcd4 (Γαλάζιο), N: #6d4c41 (Καφέ), K: #1d2b3a (Μαύρο/Σκούρο),
+   L: #7cb342 (Ανοιχτό πράσινο), .: Κενό (Λευκό)
+   ========================================================================== */
+const PIXEL_PALETTE_MAP = {
+  R: "#e53935",
+  B: "#1e88e5",
+  Y: "#fdd835",
+  G: "#2e7d32",
+  O: "#fb8c00",
+  P: "#ec407a",
+  C: "#00bcd4",
+  N: "#6d4c41",
+  K: "#1d2b3a",
+  L: "#7cb342"
+};
+
+const PIXEL_ART_DATA = {
+  // Σεπτέμβριος (4×4, 2 χρώματα)
+  september: [
+    {
+      name: "Κουτί",
+      grid: [
+        "BBBB",
+        "BYYB",
+        "BYYB",
+        "BBBB"
+      ]
+    },
+    {
+      name: "Σκακιέρα",
+      grid: [
+        "R.R.",
+        ".R.R",
+        "R.R.",
+        ".R.R"
+      ]
+    },
+    {
+      name: "Σκάλα",
+      grid: [
+        "G...",
+        "GG..",
+        "GGG.",
+        "GGGG"
+      ]
+    }
+  ],
+
+  // Οκτώβριος (5×5, 2 χρώματα)
+  october: [
+    {
+      name: "Καρδιά",
+      grid: [
+        ".R.R.",
+        "RRRRR",
+        "RRRRR",
+        ".RRR.",
+        "..R.."
+      ]
+    },
+    {
+      name: "Σπιτάκι",
+      grid: [
+        "..R..",
+        ".RRR.",
+        "RRRRR",
+        ".YYY.",
+        ".YYY."
+      ]
+    },
+    {
+      name: "Δέντρο",
+      grid: [
+        "..G..",
+        ".GGG.",
+        "GGGGG",
+        "..N..",
+        "..N.."
+      ]
+    }
+  ],
+
+  // Νοέμβριος (5×5, 2-3 χρώματα)
+  november: [
+    {
+      name: "Ήλιος",
+      grid: [
+        "Y.Y.Y",
+        ".YYY.",
+        "YYYYY",
+        ".YYY.",
+        "Y.Y.Y"
+      ]
+    },
+    {
+      name: "Σύννεφο",
+      grid: [
+        ".....",
+        ".CC..",
+        "CCCC.",
+        "CCCCC",
+        "....."
+      ]
+    },
+    {
+      name: "Ομπρέλα",
+      grid: [
+        ".RRR.",
+        "RRRRR",
+        "..N..",
+        "..N..",
+        ".NN.."
+      ]
+    }
+  ],
+
+  // Δεκέμβριος (5×5, 3 χρώματα)
+  december: [
+    {
+      name: "Χριστουγεννιάτικο δέντρο",
+      grid: [
+        "..Y..",
+        "..G..",
+        ".GRG.",
+        "GGRGG",
+        "..N.."
+      ]
+    },
+    {
+      name: "Αστέρι",
+      grid: [
+        "..Y..",
+        "YYYYY",
+        ".YYY.",
+        "YY.YY",
+        "Y...Y"
+      ]
+    },
+    {
+      name: "Κουδούνι",
+      grid: [
+        "..Y..",
+        ".YYY.",
+        ".YYY.",
+        "YYYYY",
+        "..R.."
+      ]
+    }
+  ],
+
+  // Ιανουάριος (5×5, 3 χρώματα)
+  january: [
+    {
+      name: "Χιονάνθρωπος",
+      grid: [
+        ".KKK.",
+        ".C.C.",
+        "..O..",
+        ".CCC.",
+        "CCCCC"
+      ]
+    },
+    {
+      name: "Γάντι",
+      grid: [
+        ".RRR.",
+        "RRRRR",
+        "RRRRR",
+        ".RRRR",
+        ".BBB."
+      ]
+    },
+    {
+      name: "Φλιτζάνι",
+      grid: [
+        ".C.C.",
+        "BBBB.",
+        "BBBBB",
+        "BBBB.",
+        ".BBB."
+      ]
+    }
+  ],
+
+  // Φεβρουάριος (5×5 έως 6×6, 3 χρώματα)
+  february: [
+    {
+      name: "Μάσκα",
+      grid: [
+        ".PPPP.",
+        "P.PP.P",
+        "PPPPPP",
+        ".PYYP.",
+        "..PP.."
+      ]
+    },
+    {
+      name: "Χαμογελαστό πρόσωπο",
+      grid: [
+        ".YYY.",
+        "YK.KY",
+        "YYYYY",
+        "YK.KY",
+        ".KKK."
+      ]
+    },
+    {
+      name: "Ψάρι",
+      grid: [
+        "..OOO.",
+        "OOOOOO",
+        "OOKOOO",
+        "OOOOOO",
+        "..OOO."
+      ]
+    }
+  ],
+
+  // Μάρτιος (6×6, 3 χρώματα)
+  march: [
+    {
+      name: "Λουλούδι",
+      grid: [
+        "..PP..",
+        ".PYYP.",
+        "PYYYYP",
+        ".PYYP.",
+        "..GG..",
+        ".GGGG."
+      ]
+    },
+    {
+      name: "Πεταλούδα",
+      grid: [
+        "PP..PP",
+        "PPKPP.",
+        "PPKPPP",
+        "PPKPPP",
+        "PPKPP.",
+        "PP..PP"
+      ]
+    },
+    {
+      name: "Σημαία",
+      grid: [
+        "BBBBBB",
+        "B.BBBB",
+        "......",
+        "B.BBBB",
+        "BBBBBB",
+        "......"
+      ]
+    }
+  ],
+
+  // Απρίλιος (6×6, 3-4 χρώματα)
+  april: [
+    {
+      name: "Πασχαλινό αυγό",
+      grid: [
+        "..RR..",
+        ".RYYR.",
+        "RBBBBR",
+        "RYYYYR",
+        ".RBBB.",
+        "..RR.."
+      ]
+    },
+    {
+      name: "Λαμπάδα",
+      grid: [
+        "..Y...",
+        "..O...",
+        "..R...",
+        ".RRR..",
+        "..R...",
+        "..R..."
+      ]
+    },
+    {
+      name: "Κουνελάκι",
+      grid: [
+        ".P..P.",
+        ".P..P.",
+        ".PPPP.",
+        "PPKPKP",
+        "PPPRPP",
+        ".PPPP."
+      ]
+    }
+  ],
+
+  // Μάιος (6×6, 4 χρώματα)
+  may: [
+    {
+      name: "Παπαρούνα",
+      grid: [
+        ".RRRR.",
+        "RRKKRR",
+        "RRKKRR",
+        ".RRRR.",
+        "..GG..",
+        ".GGGG."
+      ]
+    },
+    {
+      name: "Μέλισσα",
+      grid: [
+        "..CC..",
+        ".YYYY.",
+        "KKKKKK",
+        "YYYYYY",
+        "KKKKKK",
+        ".YYYY."
+      ]
+    },
+    {
+      name: "Αυτοκίνητο",
+      grid: [
+        "..RRR.",
+        ".RCCR.",
+        "RRRRRR",
+        "RRRRRR",
+        ".K..K.",
+        "......"
+      ]
+    }
+  ],
+
+  // Ιούνιος (6×6, 4 χρώματα)
+  june: [
+    {
+      name: "Ήλιος με θάλασσα",
+      grid: [
+        "YY....",
+        "YY..Y.",
+        "......",
+        "CCCCCC",
+        "BBBBBB",
+        "CCCCCC"
+      ]
+    },
+    {
+      name: "Παγωτό",
+      grid: [
+        "..PP..",
+        ".PPPP.",
+        ".RRRR.",
+        ".OOOO.",
+        "..OO..",
+        "..OO.."
+      ]
+    },
+    {
+      name: "Ιστιοφόρο",
+      grid: [
+        "...R..",
+        "..RR..",
+        ".RRR..",
+        "RRRR..",
+        "NNNNNN",
+        "BBBBBB"
+      ]
+    }
+  ]
+};
+
+/* ==========================================================================
+   4. ΚΑΤΑΣΤΑΣΗ ΕΦΑΡΜΟΓΗΣ & ΒΟΗΘΗΤΙΚΕΣ ΣΥΝΑΡΤΗΣΕΙΣ
+   ========================================================================== */
+const state = {
+  grade: "Β",
+  isAutoGrade: false,
+  autoPeriodLabel: "",
+  monthKey: "september",
+  monthNameEl: "Σεπτέμβριος",
+  weekOfMonth: 1,       // 1..5
+  sentenceIndex: 0,     // 0, 1, 2
+  // Timer & WPM
+  timerStarted: false,
+  startTimeMs: null,
+  elapsedSec: 0,
+  timerInterval: null,
+  challengeCompleted: false,
+  // Typing fields
+  typingFields: [],     // [{ id, lang, target, inputEl, targetEl, msgEl, blockEl, solved }]
+  // Pixel Art
+  pixelRows: 0,
+  pixelCols: 0,
+  pixelTarget: [],
+  pixelUser: [],
+  pixelColor: "#e53935",
+  pixelErasing: false,
+  pixelPainting: false,
+  pixelCellSize: 44
+};
+
+const $ = id => document.getElementById(id);
+
+/**
+ * Υπολογίζει τον τρέχοντα μήνα, εβδομάδα και αν υπάρχει ενεργό μάθημα.
+ */
+function detectContext(now = new Date()) {
+  const m = now.getMonth(); // 0=Ιαν..11=Δεκ
+  const monthKey = MONTH_KEYS[m];
+  const monthNameEl = MONTH_NAMES_EL[monthKey];
+
+  const dayOfMonth = now.getDate();
+  const weekOfMonth = Math.floor((dayOfMonth - 1) / 7) + 1; // 1, 2, 3, 4, 5
+  const sentenceIndex = (weekOfMonth - 1) % 3;              // 0, 1, 2
+
+  const dow = now.getDay(); // 1=Δευτέρα .. 5=Παρασκευή
+  const mins = now.getHours() * 60 + now.getMinutes();
+
+  let detectedGrade = null;
+  let periodLabel = "";
+
+  if (TIMETABLE[dow]) {
+    for (const p of PERIODS) {
+      if (mins >= p.startMin && mins < p.endMin) {
+        const g = TIMETABLE[dow][p.num];
+        if (g) {
+          detectedGrade = g;
+          periodLabel = p.label;
+        }
+        break;
+      }
+    }
+  }
+
+  return {
+    monthKey,
+    monthNameEl,
+    weekOfMonth,
+    sentenceIndex,
+    detectedGrade,
+    periodLabel
+  };
+}
+
+/**
+ * Κανονικοποίηση κειμένου για τη Β΄ τάξη (χωρίς τόνους και κεφαλαία).
+ */
+function normalizeGradeB(str) {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+/**
+ * Κανονικοποίηση Unicode σημείων στίξης (π.χ. ελληνικό ερωτηματικό \u037E -> ;)
+ */
+function normalizeUnicodePunctuation(str) {
+  return str
+    .replace(/\u037e/g, ";")
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201c\u201d]/g, '"')
+    .normalize("NFC");
+}
+
+/* ==========================================================================
+   5. ΧΡΟΝΟΜΕΤΡΟ & WPM
+   ========================================================================== */
+function resetTimer() {
+  if (state.timerInterval) {
+    clearInterval(state.timerInterval);
+    state.timerInterval = null;
+  }
+  state.timerStarted = false;
+  state.startTimeMs = null;
+  state.elapsedSec = 0;
+  $("timerDisplay").textContent = "00:00";
+  $("wpmDisplay").textContent = "0";
+}
+
+function startTimerIfNeeded() {
+  if (state.timerStarted || state.challengeCompleted) return;
+  state.timerStarted = true;
+  state.startTimeMs = Date.now();
+  state.timerInterval = setInterval(updateMetrics, 250);
+}
+
+function stopTimer() {
+  if (state.timerInterval) {
+    clearInterval(state.timerInterval);
+    state.timerInterval = null;
+  }
+  updateMetrics();
+}
+
+function formatTime(totalSeconds) {
+  const s = Math.floor(totalSeconds);
+  const mins = Math.floor(s / 60);
+  const secs = s % 60;
+  return String(mins).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
+}
+
+function getTotalTypedChars() {
+  if (state.grade === "Α") return 0;
+  return state.typingFields.reduce((acc, f) => acc + f.inputEl.value.length, 0);
+}
+
+function updateMetrics() {
+  if (!state.timerStarted || !state.startTimeMs) return;
+  const elapsedMs = Date.now() - state.startTimeMs;
+  state.elapsedSec = Math.max(1, elapsedMs / 1000);
+  $("timerDisplay").textContent = formatTime(state.elapsedSec);
+
+  if (state.grade !== "Α") {
+    const chars = getTotalTypedChars();
+    const minutes = state.elapsedSec / 60;
+    const wpm = Math.round((chars / 5) / minutes);
+    $("wpmDisplay").textContent = String(wpm);
+  }
+}
+
+/* ==========================================================================
+   6. ΕΠΙΤΥΧΙΑ & ΚΟΜΦΕΤΙ
+   ========================================================================== */
+function triggerSuccess(detailsText) {
+  if (state.challengeCompleted) return;
+  state.challengeCompleted = true;
+  stopTimer();
+
+  $("successTitle").textContent = "Μπράβο! Ολοκλήρωσες την πρόκληση!";
+  $("successDetails").textContent = detailsText;
+  $("successBanner").classList.add("show");
+  launchConfetti();
+}
+
+function launchConfetti() {
+  const existing = $("confettiLayer");
+  if (existing) existing.remove();
+
+  const layer = document.createElement("div");
+  layer.id = "confettiLayer";
+  const colors = ["#e53935", "#fb8c00", "#fdd835", "#2e7d32", "#1e88e5", "#8e24aa", "#ec407a"];
+
+  for (let i = 0; i < 85; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    const left = Math.random() * 100;
+    const delay = Math.random() * 1.2;
+    const duration = 2.2 + Math.random() * 2;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.left = left + "%";
+    piece.style.background = color;
+    piece.style.animationDelay = delay + "s";
+    piece.style.animationDuration = duration + "s";
+    layer.appendChild(piece);
+  }
+
+  document.body.appendChild(layer);
+  setTimeout(() => {
+    if (layer.parentNode) layer.remove();
+  }, 4800);
+}
+
+/* ==========================================================================
+   7. ΛΕΙΤΟΥΡΓΙΑ ΠΛΗΚΤΡΟΛΟΓΗΣΗΣ (Β΄ - ΣΤ΄)
+   ========================================================================== */
+function renderTypingChallenge() {
+  const grade = state.grade;
+  const monthKey = state.monthKey;
+  const idx = state.sentenceIndex;
+  const isGradeB = grade === "Β";
+
+  $("typingArea").hidden = false;
+  $("pixelArea").hidden = true;
+  $("wpmBox").hidden = false;
+
+  $("challengeHeading").textContent = `⌨️ Πληκτρολόγηση • ${grade}΄ Τάξη`;
+  $("ruleBadge").textContent = isGradeB
+    ? "Χωρίς έλεγχο τόνων & κεφαλαίων"
+    : "Ακριβής έλεγχος (τόνοι, κεφαλαία, στίξη)";
+  $("ruleBadge").className = isGradeB ? "badge-rule" : "badge-rule strict";
+
+  const container = $("typingArea");
+  container.innerHTML = "";
+  state.typingFields = [];
+
+  let items = [];
+  if (grade === "Β" || grade === "Γ" || grade === "Δ") {
+    const sentence = TYPING_DATA[grade][monthKey][idx];
+    items.push({ lang: "Ελληνικά", text: sentence });
+  } else {
+    // Ε΄ και ΣΤ΄: Δύο προτάσεις (Ελληνικά & Αγγλικά)
+    // Μονές εβδομάδες (1η, 3η, 5η): πρώτα Ελληνικά. Ζυγές (2η, 4η): πρώτα Αγγλικά.
+    const elSentence = TYPING_DATA[grade][monthKey].el[idx];
+    const enSentence = TYPING_DATA[grade][monthKey].en[idx];
+    const isOddWeek = (state.weekOfMonth % 2) === 1;
+
+    if (isOddWeek) {
+      items.push({ lang: "🇬🇷 Ελληνικά", text: elSentence });
+      items.push({ lang: "🇬🇧 English", text: enSentence });
+    } else {
+      items.push({ lang: "🇬🇧 English", text: enSentence });
+      items.push({ lang: "🇬🇷 Ελληνικά", text: elSentence });
+    }
+  }
+
+  items.forEach((item, index) => {
+    const block = document.createElement("div");
+    block.className = "typing-block";
+
+    const langTag = document.createElement("div");
+    langTag.className = "lang-tag";
+    langTag.textContent = item.lang;
+
+    const targetBox = document.createElement("div");
+    targetBox.className = "target-sentence";
+    targetBox.textContent = item.text;
+
+    const inputRow = document.createElement("div");
+    inputRow.className = "input-row";
+
+    const inputEl = document.createElement("input");
+    inputEl.type = "text";
+    inputEl.className = "typing-input";
+    inputEl.placeholder = "Πληκτρολόγησε την πρόταση εδώ...";
+    inputEl.autocomplete = "off";
+    inputEl.autocorrect = "off";
+    inputEl.autocapitalize = "off";
+    inputEl.spellcheck = false;
+    inputEl.setAttribute("onpaste", "return false");
+    inputEl.setAttribute("ondrop", "return false");
+
+    const checkBtn = document.createElement("button");
+    checkBtn.type = "button";
+    checkBtn.className = "action-btn btn-check";
+    checkBtn.innerHTML = "✅ Έλεγχος";
+
+    const msgEl = document.createElement("div");
+    msgEl.className = "feedback-msg";
+
+    inputRow.appendChild(inputEl);
+    inputRow.appendChild(checkBtn);
+
+    block.appendChild(langTag);
+    block.appendChild(targetBox);
+    block.appendChild(inputRow);
+    block.appendChild(msgEl);
+    container.appendChild(block);
+
+    const fieldObj = {
+      id: index,
+      target: item.text,
+      inputEl,
+      targetEl: targetBox,
+      msgEl,
+      blockEl: block,
+      solved: false
+    };
+    state.typingFields.push(fieldObj);
+
+    // Live ανατροφοδότηση καθώς πληκτρολογεί ο μαθητής
+    inputEl.addEventListener("input", () => {
+      startTimerIfNeeded();
+      evaluateTypingField(fieldObj, false);
+      updateMetrics();
+    });
+
+    // Έλεγχος με Enter ή κλικ στο κουμπί
+    inputEl.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        evaluateTypingField(fieldObj, true);
+      }
+    });
+
+    checkBtn.addEventListener("click", () => {
+      startTimerIfNeeded();
+      evaluateTypingField(fieldObj, true);
+    });
+  });
+
+  if (state.typingFields.length > 0) {
+    state.typingFields[0].inputEl.focus();
+  }
+}
+
+function escapeHtml(ch) {
+  if (ch === "&") return "&amp;";
+  if (ch === "<") return "&lt;";
+  if (ch === ">") return "&gt;";
+  return ch;
+}
+
+/**
+ * Ελέγχει ένα πεδίο πληκτρολόγησης, χρωματίζει σωστά/λάθη και ενημερώνει την κατάσταση.
+ */
+function evaluateTypingField(fieldObj, explicitCheck) {
+  const isGradeB = state.grade === "Β";
+  const rawTarget = normalizeUnicodePunctuation(fieldObj.target);
+  const rawTyped = normalizeUnicodePunctuation(fieldObj.inputEl.value);
+
+  const normTarget = isGradeB ? normalizeGradeB(rawTarget) : rawTarget;
+  const normTyped = isGradeB ? normalizeGradeB(rawTyped) : rawTyped;
+
+  // Δημιουργία χρωματισμένου HTML για την πρόταση-στόχο
+  let html = "";
+  let hasAnyError = false;
+
+  for (let i = 0; i < rawTarget.length; i++) {
+    const displayChar = escapeHtml(rawTarget[i]);
+    if (i < normTyped.length) {
+      if (normTyped[i] === normTarget[i]) {
+        html += `<span class="char-ok">${displayChar}</span>`;
+      } else {
+        html += `<span class="char-err">${displayChar}</span>`;
+        hasAnyError = true;
+      }
+    } else {
+      html += `<span class="char-pending">${displayChar}</span>`;
+    }
+  }
+
+  // Αν ο μαθητής έγραψε επιπλέον χαρακτήρες πέρα από το μήκος της πρότασης
+  if (normTyped.length > normTarget.length) {
+    hasAnyError = true;
+    const extra = escapeHtml(rawTyped.slice(rawTarget.length));
+    html += `<span class="char-err" title="Επιπλέον χαρακτήρες">${extra}</span>`;
+  }
+
+  fieldObj.targetEl.innerHTML = html;
+
+  // Έλεγχος πλήρους αντιστοιχίας
+  const isExactMatch = (normTyped === normTarget);
+
+  if (isExactMatch) {
+    fieldObj.solved = true;
+    fieldObj.inputEl.classList.remove("has-error");
+    fieldObj.inputEl.classList.add("is-valid");
+    fieldObj.blockEl.classList.add("completed");
+    fieldObj.msgEl.className = "feedback-msg ok";
+    fieldObj.msgEl.textContent = "✔ Τέλεια! Η πρόταση είναι ολόσωστη!";
+
+    // Αν υπάρχουν κι άλλες προτάσεις (Ε΄/ΣΤ΄), μετακίνηση στην επόμενη άλυτη
+    const nextUnsolved = state.typingFields.find(f => !f.solved);
+    if (nextUnsolved) {
+      if (explicitCheck) nextUnsolved.inputEl.focus();
+    } else {
+      const finalTime = $("timerDisplay").textContent;
+      const finalWpm = $("wpmDisplay").textContent;
+      triggerSuccess(`Χρόνος: ${finalTime} • Ταχύτητα: ${finalWpm} λέξεις/λεπτό!`);
+    }
+  } else {
+    fieldObj.solved = false;
+    fieldObj.blockEl.classList.remove("completed");
+    fieldObj.inputEl.classList.remove("is-valid");
+
+    if (hasAnyError) {
+      fieldObj.inputEl.classList.add("has-error");
+      fieldObj.msgEl.className = "feedback-msg err";
+      fieldObj.msgEl.textContent = "⚠️ Πρόσεξε τα κόκκινα γράμματα! Διόρθωσέ τα.";
+    } else {
+      fieldObj.inputEl.classList.remove("has-error");
+      fieldObj.msgEl.className = "feedback-msg";
+      if (explicitCheck) {
+        fieldObj.msgEl.className = "feedback-msg err";
+        fieldObj.msgEl.textContent = "Συνέχισε! Δεν έχεις ολοκληρώσει ακόμα όλη την πρόταση.";
+      } else {
+        fieldObj.msgEl.textContent = "";
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   8. ΛΕΙΤΟΥΡΓΙΑ PIXEL ART (Α΄ ΤΑΞΗ)
+   ========================================================================== */
+function renderPixelArtChallenge() {
+  $("typingArea").hidden = true;
+  $("pixelArea").hidden = false;
+  $("wpmBox").hidden = true;
+
+  const item = PIXEL_ART_DATA[state.monthKey][state.sentenceIndex];
+  $("challengeHeading").textContent = `🎨 Αντιγραφή Pixel Art • Α΄ Τάξη`;
+  $("ruleBadge").textContent = `Πλέγμα ${item.grid[0].length}×${item.grid.length}`;
+  $("ruleBadge").className = "badge-rule";
+  $("refTitle").textContent = `🖼️ Αντίγραψε: ${item.name}`;
+
+  state.pixelRows = item.grid.length;
+  state.pixelCols = item.grid[0].length;
+  state.pixelTarget = [];
+  const usedColorCodes = new Set();
+
+  for (let r = 0; r < state.pixelRows; r++) {
+    for (let c = 0; c < state.pixelCols; c++) {
+      const code = item.grid[r][c];
+      if (code === "." || !PIXEL_PALETTE_MAP[code]) {
+        state.pixelTarget.push(null);
+      } else {
+        state.pixelTarget.push(PIXEL_PALETTE_MAP[code]);
+        usedColorCodes.add(code);
+      }
+    }
+  }
+
+  state.pixelUser = new Array(state.pixelRows * state.pixelCols).fill(null);
+
+  // Δημιουργία παλέτας (τα χρώματα της εικόνας + 1-2 έξτρα βασικά χρώματα)
+  const extraCodes = ["R", "B", "Y", "G", "O", "P"];
+  for (const ec of extraCodes) {
+    if (usedColorCodes.size >= Math.min(6, usedColorCodes.size + 2)) break;
+    if (!usedColorCodes.has(ec)) {
+      usedColorCodes.add(ec);
+      if (usedColorCodes.size >= 4) break;
+    }
+  }
+
+  const paletteColors = Array.from(usedColorCodes).map(c => PIXEL_PALETTE_MAP[c]);
+  state.pixelColor = paletteColors[0] || "#e53935";
+  state.pixelErasing = false;
+
+  const palEl = $("pixelPalette");
+  palEl.innerHTML = "";
+  paletteColors.forEach(hex => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "swatch";
+    btn.style.background = hex;
+    btn.dataset.color = hex;
+    btn.setAttribute("aria-label", "Επιλογή χρώματος");
+    btn.addEventListener("click", () => {
+      state.pixelColor = hex;
+      state.pixelErasing = false;
+      refreshPixelTools();
+    });
+    palEl.appendChild(btn);
+  });
+
+  refreshPixelTools();
+  $("pixelFeedback").textContent = "";
+  drawPixelBoards();
+}
+
+function refreshPixelTools() {
+  document.querySelectorAll("#pixelPalette .swatch").forEach(btn => {
+    btn.classList.toggle("selected", !state.pixelErasing && btn.dataset.color === state.pixelColor);
+  });
+  $("pixelEraser").classList.toggle("selected", state.pixelErasing);
+}
+
+function drawPixelBoards() {
+  if (state.grade !== "Α" || !state.pixelRows) return;
+
+  // Υπολογισμός μεγέθους τετραγώνου ανάλογα με την οθόνη
+  const maxBoardPx = Math.min(260, Math.floor((window.innerWidth - 120) / 2));
+  const cell = Math.max(28, Math.min(48, Math.floor(maxBoardPx / Math.max(state.pixelRows, state.pixelCols))));
+  state.pixelCellSize = cell;
+
+  drawSingleGrid($("userCanvas"), state.pixelUser, cell);
+  drawSingleGrid($("refCanvas"), state.pixelTarget, cell);
+}
+
+function drawSingleGrid(canvas, cellsArray, cell) {
+  const ctx = canvas.getContext("2d");
+  const rows = state.pixelRows;
+  const cols = state.pixelCols;
+  const fs = Math.max(12, Math.min(16, Math.floor(cell * 0.38)));
+  const marginL = Math.round(fs * 2.1);
+  const marginT = Math.round(fs * 1.8);
+
+  canvas.width = marginL + cols * cell;
+  canvas.height = marginT + rows * cell;
+
+  // Φόντο
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Γέμισμα κελιών
+  for (let i = 0; i < cellsArray.length; i++) {
+    if (cellsArray[i]) {
+      const x = i % cols;
+      const y = Math.floor(i / cols);
+      ctx.fillStyle = cellsArray[i];
+      ctx.fillRect(marginL + x * cell, marginT + y * cell, cell, cell);
+    }
+  }
+
+  // Γραμμές πλέγματος
+  ctx.strokeStyle = "#90a4ae";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (let x = 0; x <= cols; x++) {
+    ctx.moveTo(marginL + x * cell + 0.5, marginT);
+    ctx.lineTo(marginL + x * cell + 0.5, marginT + rows * cell);
+  }
+  for (let y = 0; y <= rows; y++) {
+    ctx.moveTo(marginL, marginT + y * cell + 0.5);
+    ctx.lineTo(marginL + cols * cell, marginT + y * cell + 0.5);
+  }
+  ctx.stroke();
+
+  // Αρίθμηση στηλών (1..N) & γραμμών (1..N)
+  ctx.fillStyle = "#1d2b3a";
+  ctx.font = `bold ${fs}px "Trebuchet MS", Verdana, sans-serif`;
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
+  for (let x = 0; x < cols; x++) {
+    ctx.fillText(String(x + 1), marginL + x * cell + cell / 2, marginT / 2);
+  }
+  ctx.textAlign = "right";
+  for (let y = 0; y < rows; y++) {
+    ctx.fillText(String(y + 1), marginL - 6, marginT + y * cell + cell / 2 + 1);
+  }
+}
+
+function handlePixelPointer(e) {
+  const canvas = $("userCanvas");
+  const rect = canvas.getBoundingClientRect();
+  const cell = state.pixelCellSize;
+  const fs = Math.max(12, Math.min(16, Math.floor(cell * 0.38)));
+  const marginL = Math.round(fs * 2.1);
+  const marginT = Math.round(fs * 1.8);
+
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  const x = Math.floor(((e.clientX - rect.left) * scaleX - marginL) / cell);
+  const y = Math.floor(((e.clientY - rect.top) * scaleY - marginT) / cell);
+
+  if (x < 0 || y < 0 || x >= state.pixelCols || y >= state.pixelRows) return;
+
+  startTimerIfNeeded();
+
+  const idx = y * state.pixelCols + x;
+  const newVal = state.pixelErasing ? null : state.pixelColor;
+  if (state.pixelUser[idx] !== newVal) {
+    state.pixelUser[idx] = newVal;
+    drawPixelBoards();
+  }
+}
+
+// Σύνδεση συμβάντων ζωγραφικής στον καμβά
+const userCv = $("userCanvas");
+userCv.addEventListener("pointerdown", e => {
+  state.pixelPainting = true;
+  userCv.setPointerCapture(e.pointerId);
+  handlePixelPointer(e);
+});
+userCv.addEventListener("pointermove", e => {
+  if (state.pixelPainting) handlePixelPointer(e);
+});
+["pointerup", "pointercancel"].forEach(ev => {
+  userCv.addEventListener(ev, () => { state.pixelPainting = false; });
+});
+
+$("pixelEraser").addEventListener("click", () => {
+  state.pixelErasing = true;
+  refreshPixelTools();
+});
+
+$("pixelClearBtn").addEventListener("click", () => {
+  state.pixelUser.fill(null);
+  $("pixelFeedback").textContent = "";
+  drawPixelBoards();
+});
+
+$("pixelCheckBtn").addEventListener("click", () => {
+  let correctCount = 0;
+  let wrongCount = 0;
+
+  for (let i = 0; i < state.pixelTarget.length; i++) {
+    const u = state.pixelUser[i];
+    const t = state.pixelTarget[i];
+    if (u === t) {
+      correctCount++;
+    } else if (u !== null) {
+      // Σβήνει τα λάθος χρωματισμένα τετραγωνάκια ώστε να βοηθήσει τα παιδιά της Α΄ τάξης
+      state.pixelUser[i] = null;
+      wrongCount++;
+    }
+  }
+
+  drawPixelBoards();
+
+  if (correctCount === state.pixelTarget.length) {
+    $("pixelFeedback").className = "feedback-msg ok";
+    $("pixelFeedback").textContent = "✔ Τέλεια ζωγραφιά!";
+    const finalTime = $("timerDisplay").textContent;
+    triggerSuccess(`Αντέγραψες σωστά την εικόνα σε ${finalTime}!`);
+  } else {
+    $("pixelFeedback").className = "feedback-msg err";
+    if (wrongCount > 0) {
+      $("pixelFeedback").textContent = `Έσβησα ${wrongCount} λάθος τετραγωνάκια. Συνέχισε!`;
+    } else {
+      const remaining = state.pixelTarget.length - correctCount;
+      $("pixelFeedback").textContent = `Πολύ καλά! Μένουν ακόμα ${remaining} τετραγωνάκια.`;
+    }
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (state.grade === "Α") drawPixelBoards();
+});
+
+/* ==========================================================================
+   9. ΕΝΑΛΛΑΓΗ ΤΑΞΗΣ & ΑΡΧΙΚΟΠΟΙΗΣΗ
+   ========================================================================== */
+function loadChallengeForGrade(grade, isAuto = false, periodLabel = "") {
+  state.grade = grade;
+  state.isAutoGrade = isAuto;
+  state.autoPeriodLabel = periodLabel;
+  state.challengeCompleted = false;
+
+  resetTimer();
+  $("successBanner").classList.remove("show");
+
+  // Ενημέρωση κουμπιών επιλογής τάξης
+  document.querySelectorAll(".grade-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.grade === grade);
+  });
+
+  // Ενημέρωση badge ώρας
+  const badge = $("scheduleBadge");
+  if (isAuto && periodLabel) {
+    badge.textContent = `🔔 Τώρα: ${periodLabel} • ${grade}΄ Τάξη`;
+    badge.className = "status-pill";
+  } else {
+    badge.textContent = `📚 Ελεύθερη επιλογή • ${grade}΄ Τάξη`;
+    badge.className = "status-pill manual";
+  }
+
+  $("dateContextText").textContent = `📅 ${state.monthNameEl} • ${state.weekOfMonth}η εβδομάδα`;
+
+  if (grade === "Α") {
+    renderPixelArtChallenge();
+  } else {
+    renderTypingChallenge();
+  }
+}
+
+document.querySelectorAll(".grade-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const selected = btn.dataset.grade;
+    loadChallengeForGrade(selected, false, "");
+  });
+});
+
+function initApp() {
+  const ctx = detectContext(new Date());
+  state.monthKey = ctx.monthKey;
+  state.monthNameEl = ctx.monthNameEl;
+  state.weekOfMonth = ctx.weekOfMonth;
+  state.sentenceIndex = ctx.sentenceIndex;
+
+  if (ctx.detectedGrade) {
+    loadChallengeForGrade(ctx.detectedGrade, true, ctx.periodLabel);
+  } else {
+    loadChallengeForGrade("Β", false, "");
+  }
+}
+
+window.addEventListener("DOMContentLoaded", initApp);
+</script>
+</body>
+</html>
