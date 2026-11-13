@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Θετικές ή Αρνητικές Εκφράσεις;</title>
+<style>
+  :root {
+    --ink: #243247;
+    --muted: #64748b;
+    --panel: #ffffff;
+    --blue: #eaf3ff;
+    --green: #218653;
+    --red: #c64c4c;
+    --sun: #f6c94b;
+    --cloud: #7c8795;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 24px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #eaf4ff, #f8f5e9);
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .app {
+    width: min(850px, 100%);
+    background: var(--panel);
+    border-radius: 24px;
+    padding: clamp(20px, 4vw, 38px);
+    box-shadow: 0 12px 35px rgba(40, 60, 90, .13);
+    text-align: center;
+  }
+  h1 { margin: 0 0 8px; font-size: clamp(1.6rem, 4vw, 2.35rem); }
+  .intro { margin: 0 0 24px; color: var(--muted); font-size: 1.05rem; }
+  .topline {
+    display: flex; justify-content: space-between; gap: 12px;
+    align-items: center; flex-wrap: wrap; margin-bottom: 12px;
+    color: var(--muted); font-weight: bold;
+  }
+  .track { height: 12px; background: #e8edf3; border-radius: 99px; overflow: hidden; }
+  .fill { height: 100%; width: 0; background: #6aa7df; transition: width .25s ease; }
+  .sentence-card {
+    min-height: 180px; display: grid; place-items: center;
+    margin: 24px 0; padding: 24px;
+    border: 2px solid #e5edf5; border-radius: 18px;
+    background: #fbfdff;
+  }
+  #sentence { font-size: clamp(1.5rem, 4vw, 2.35rem); line-height: 1.35; font-weight: 700; }
+  .question { margin: 0 0 16px; font-size: 1.12rem; font-weight: bold; }
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .choice {
+    min-height: 190px; border: 3px solid transparent; border-radius: 18px;
+    background: #f7f9fc; padding: 16px 12px; cursor: pointer;
+    color: var(--ink); font: inherit; font-size: 1.2rem; font-weight: bold;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    transition: transform .15s, border-color .15s, background .15s;
+  }
+  .choice:hover:not(:disabled) { transform: translateY(-3px); border-color: #a8bfd8; }
+  .choice:focus-visible, .main-button:focus-visible { outline: 4px solid #286db3; outline-offset: 3px; }
+  .choice:disabled { cursor: default; opacity: .78; }
+  .choice svg { width: 104px; height: 92px; }
+  .choice.sun-choice { background: #fff9e8; }
+  .choice.cloud-choice { background: #f0f2f5; }
+  .choice.selected-correct { border-color: var(--green); background: #eaf8ef; opacity: 1; }
+  .choice.selected-wrong { border-color: var(--red); background: #fff0f0; opacity: 1; }
+  .feedback {
+    min-height: 58px; margin: 18px 0 8px; padding: 14px;
+    border-radius: 12px; font-size: 1.15rem; font-weight: bold;
+    display: none;
+  }
+  .feedback.good { display: block; color: #176b3e; background: #e8f7ed; }
+  .feedback.bad { display: block; color: #9b3030; background: #fff0f0; }
+  .main-button {
+    border: 0; border-radius: 12px; padding: 14px 28px; margin-top: 12px;
+    background: #286db3; color: white; font: inherit; font-size: 1.1rem;
+    font-weight: bold; cursor: pointer;
+  }
+  .main-button:hover { background: #1f568f; }
+  .main-button:disabled { background: #9aa9b8; cursor: default; }
+  .hidden { display: none !important; }
+  .results { padding: 24px 10px 8px; }
+  .results h2 { font-size: 2rem; }
+  .score { font-size: 1.6rem; font-weight: bold; margin: 16px; }
+  .small-note { color: var(--muted); font-size: .9rem; margin-top: 24px; }
+  @media (max-width: 560px) {
+    body { padding: 12px; }
+    .choices { gap: 10px; }
+    .choice { min-height: 155px; font-size: 1rem; }
+    .choice svg { width: 78px; height: 72px; }
+    .sentence-card { min-height: 150px; }
+  }
+</style>
+</head>
+<body>
+<main class="app">
+  <h1>Θετικές ή Αρνητικές Εκφράσεις;</h1>
+  <p class="intro">Διάβασε προσεκτικά κάθε πρόταση και διάλεξε το σωστό σύμβολο.</p>
+
+  <section id="game">
+    <div class="topline">
+      <span id="counter">Πρόταση 1 από 35</span>
+      <span id="score">Σωστές απαντήσεις: 0</span>
+    </div>
+    <div class="track" aria-label="Πρόοδος"><div class="fill" id="progress"></div></div>
+
+    <div class="sentence-card" aria-live="polite">
+      <div id="sentence">Πάτησε «Ξεκινάμε!» για να αρχίσει το παιχνίδι.</div>
+    </div>
+    <p class="question">Η πρόταση είναι...</p>
+
+    <div class="choices">
+      <button class="choice sun-choice" id="positiveBtn" type="button" aria-label="Θετική έκφραση">
+        <svg viewBox="0 0 120 105" role="img" aria-label="Κίτρινος ήλιος">
+          <g stroke="#D99C18" stroke-width="6" stroke-linecap="round">
+            <path d="M60 5V17 M60 88V100 M10 52H22 M98 52H110 M25 17L34 26 M86 78L95 87 M95 17L86 26 M34 78L25 87"/>
+          </g>
+          <circle cx="60" cy="52" r="30" fill="#F6C94B" stroke="#D99C18" stroke-width="4"/>
+          <circle cx="49" cy="45" r="3.5" fill="#654B20"/>
+          <circle cx="71" cy="45" r="3.5" fill="#654B20"/>
+          <path d="M47 61 Q60 73 73 61" fill="none" stroke="#654B20" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        ΘΕΤΙΚΗ
+      </button>
+
+      <button class="choice cloud-choice" id="negativeBtn" type="button" aria-label="Αρνητική έκφραση">
+        <svg viewBox="0 0 120 105" role="img" aria-label="Γκρι σύννεφο με βροχή">
+          <path d="M27 66 C12 66 7 55 12 43 C16 32 27 29 37 32 C43 12 65 8 80 21 C88 28 90 35 90 40 C106 38 115 49 112 61 C110 70 102 74 91 74 H28Z" fill="#9AA3AE" stroke="#6E7885" stroke-width="4"/>
+          <g stroke="#4F91C5" stroke-width="6" stroke-linecap="round">
+            <path d="M34 81L28 94 M59 81L53 94 M84 81L78 94"/>
+          </g>
+          <path d="M43 52L51 55 M69 55L77 52" stroke="#48515B" stroke-width="4" stroke-linecap="round"/>
+          <path d="M51 65 Q60 60 69 65" fill="none" stroke="#48515B" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        ΑΡΝΗΤΙΚΗ
+      </button>
+    </div>
+
+    <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+    <button class="main-button" id="startBtn" type="button">Ξεκινάμε!</button>
+    <button class="main-button hidden" id="nextBtn" type="button">Επόμενη πρόταση</button>
+  </section>
+
+  <section id="results" class="results hidden" aria-live="polite">
+    <h2>Μπράβο, ολοκλήρωσες το παιχνίδι!</h2>
+    <p class="score" id="finalScore"></p>
+    <p id="finalMessage"></p>
+    <button class="main-button" id="restartBtn" type="button">Παίξε ξανά με νέα σειρά</button>
+  </section>
+  <p class="small-note">Κάθε πρόταση εμφανίζεται μία φορά. Στο τέλος μπορείς να παίξεις ξανά με διαφορετική τυχαία σειρά.</p>
+</main>
+
+<script>
+"use strict";
+
+const statements = [
+  { text: "Μπράβο το προσπάθησες!", type: "positive" },
+  { text: "Ξέρω ότι μπορείς.", type: "positive" },
+  { text: "Θες να σε βοηθήσω;", type: "positive" },
+  { text: "Καλή ιδέα, να τη δοκιμάσουμε.", type: "positive" },
+  { text: "Σε ευχαριστώ που με βοήθησες.", type: "positive" },
+  { text: "Έλα μαζί μας, έχει χώρο για όλους.", type: "positive" },
+  { text: "Μου άρεσε που μοιράστηκες τα παιχνίδια σου.", type: "positive" },
+  { text: "Πολύ ωραία απάντηση.", type: "positive" },
+  { text: "Μου άρεσε η ζωγραφιά σου.", type: "positive" },
+  { text: "Μαθαίνεις κάθε μέρα και γίνεσαι καλύτερος.", type: "positive" },
+  { text: "Τέλειο αυτό που έφτιαξες.", type: "positive" },
+  { text: "Είσαι καλή φίλη.", type: "positive" },
+  { text: "Σε πιστεύω, μπορείς να τα καταφέρεις!", type: "positive" },
+  { text: "Ευχαριστώ που με άκουσες.", type: "positive" },
+  { text: "Δεν πειράζει αν έκανες λάθος, έτσι μαθαίνεις.", type: "positive" },
+
+  { text: "Δεν σε θέλω εδώ.", type: "negative" },
+  { text: "Πάλι λάθος έκανες.", type: "negative" },
+  { text: "Κανείς δεν σε θέλει δίπλα του.", type: "negative" },
+  { text: "Δεν ξέρεις τίποτα.", type: "negative" },
+  { text: "Χαχα, τι άσχημη ζωγραφιά!", type: "negative" },
+  { text: "Μην γράφεις, δεν μας νοιάζει.", type: "negative" },
+  { text: "Σταμάτα, είσαι ενοχλητικός.", type: "negative" },
+  { text: "Δεν θέλω να κάτσω δίπλα σου.", type: "negative" },
+  { text: "Πάντα τα κάνεις όλα λάθος.", type: "negative" },
+  { text: "Δεν με νοιάζει τι λες.", type: "negative" },
+  { text: "Θα το πω σε όλους για να γελάσουμε.", type: "negative" },
+  { text: "Η ζωγραφιά σου είναι άσχημη.", type: "negative" },
+  { text: "Φύγε από εδώ.", type: "negative" },
+  { text: "Μην αγγίζεις τα πράγματά μου.", type: "negative" },
+  { text: "Δεν ξέρεις να παίζεις.", type: "negative" },
+  { text: "Έχασες πάλι!", type: "negative" },
+  { text: "Δεν σε βάζουμε στην ομάδα.", type: "negative" },
+  { text: "Δεν θέλω να είμαι φίλος σου.", type: "negative" },
+  { text: "Άσε με ήσυχο.", type: "negative" },
+  { text: "Δεν τα καταφέρνεις ποτέ.", type: "negative" }
+];
+
+const $ = (id) => document.getElementById(id);
+const game = $("game");
+const results = $("results");
+const sentence = $("sentence");
+const feedback = $("feedback");
+const positiveBtn = $("positiveBtn");
+const negativeBtn = $("negativeBtn");
+const startBtn = $("startBtn");
+const nextBtn = $("nextBtn");
+
+let order = [];
+let current = 0;
+let correct = 0;
+let answered = false;
+let started = false;
+
+function shuffle(items) {
+  const copy = items.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function updateStatus() {
+  $("counter").textContent = `Πρόταση ${current + 1} από ${order.length}`;
+  $("score").textContent = `Σωστές απαντήσεις: ${correct}`;
+  $("progress").style.width = `${(current / order.length) * 100}%`;
+}
+
+function beginGame() {
+  order = shuffle(statements);
+  current = 0;
+  correct = 0;
+  started = true;
+  results.classList.add("hidden");
+  game.classList.remove("hidden");
+  startBtn.classList.add("hidden");
+  showStatement();
+}
+
+function showStatement() {
+  answered = false;
+  sentence.textContent = order[current].text;
+  feedback.className = "feedback";
+  feedback.textContent = "";
+  positiveBtn.disabled = false;
+  negativeBtn.disabled = false;
+  positiveBtn.classList.remove("selected-correct", "selected-wrong");
+  negativeBtn.classList.remove("selected-correct", "selected-wrong");
+  nextBtn.classList.add("hidden");
+  $("progress").style.width = `${(current / order.length) * 100}%`;
+  updateStatus();
+}
+
+function answer(choice) {
+  if (!started || answered) return;
+  answered = true;
+  const isCorrect = choice === order[current].type;
+  const selectedButton = choice === "positive" ? positiveBtn : negativeBtn;
+  positiveBtn.disabled = true;
+  negativeBtn.disabled = true;
+
+  if (isCorrect) {
+    correct++;
+    selectedButton.classList.add("selected-correct");
+    feedback.textContent = "Σωστά! Μπράβο!";
+    feedback.className = "feedback good";
+  } else {
+    selectedButton.classList.add("selected-wrong");
+    const rightAnswer = order[current].type === "positive" ? "Θετική" : "Αρνητική";
+    feedback.textContent = `Όχι ακριβώς. Η σωστή απάντηση είναι: ${rightAnswer} έκφραση.`;
+    feedback.className = "feedback bad";
+    (order[current].type === "positive" ? positiveBtn : negativeBtn).classList.add("selected-correct");
+  }
+  $("score").textContent = `Σωστές απαντήσεις: ${correct}`;
+  nextBtn.textContent = current === order.length - 1 ? "Δες το αποτέλεσμα" : "Επόμενη πρόταση";
+  nextBtn.classList.remove("hidden");
+}
+
+function nextStatement() {
+  if (!answered) return;
+  current++;
+  if (current < order.length) {
+    showStatement();
+  } else {
+    $("progress").style.width = "100%";
+    game.classList.add("hidden");
+    results.classList.remove("hidden");
+    $("finalScore").textContent = `Πέτυχες ${correct} σωστές απαντήσεις στις ${order.length}.`;
+    $("finalMessage").textContent =
+      correct === order.length ? "Εξαιρετικά! Ξεχώρισες όλες τις εκφράσεις!" :
+      correct >= order.length * 0.7 ? "Πολύ καλή προσπάθεια! Συνέχισε έτσι!" :
+      "Καλή προσπάθεια! Με λίγη εξάσκηση θα τα καταφέρεις ακόμη καλύτερα.";
+  }
+}
+
+positiveBtn.addEventListener("click", () => answer("positive"));
+negativeBtn.addEventListener("click", () => answer("negative"));
+startBtn.addEventListener("click", beginGame);
+nextBtn.addEventListener("click", nextStatement);
+$("restartBtn").addEventListener("click", beginGame);
+</script>
+</body>
+</html>
