@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Μαθαίνω τον υπολογιστή – Κουίζ</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef6ff;--card:#fff;--ink:#1d2b4f;--blue:#2f6fed;--ok:#1f9d55;--bad:#e03e3e;--sun:#ffc83d;--line:#c9d8f2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Comfortaa","Segoe UI",system-ui,sans-serif;font-size:18px;line-height:1.5}
+header{background:var(--blue);color:#fff;padding:22px 16px;text-align:center}
+header h1{margin:0;font-size:clamp(24px,5vw,38px)}
+header p{margin:6px 0 0;opacity:.95}
+nav{display:flex;gap:8px;justify-content:center;padding:14px 10px;flex-wrap:wrap}
+nav button{font:inherit;font-weight:700;border:3px solid var(--blue);background:#fff;color:var(--blue);border-radius:30px;padding:8px 18px;cursor:pointer}
+nav button[aria-selected=true]{background:var(--blue);color:#fff}
+main{max-width:900px;margin:0 auto;padding:0 14px 40px}
+section{display:none;background:var(--card);border-radius:22px;padding:20px;box-shadow:0 4px 0 var(--line)}
+section.on{display:block}
+h2{margin:0 0 4px;font-size:24px}
+.hint{margin:0 0 16px;color:#4b5b82}
+button:focus-visible,select:focus-visible,.card:focus-visible,.opt:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
+
+.tray,.zone{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:120px;padding:10px;border-radius:16px}
+.tray{border:3px dashed var(--line);margin-bottom:16px}
+.zones{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.zbox{border:3px solid var(--blue);border-radius:18px;overflow:hidden;background:#f6faff}
+.zbox h3{margin:0;background:var(--blue);color:#fff;text-align:center;padding:6px;font-size:18px}
+.zone{min-height:150px;align-content:flex-start}
+.zbox.hover{background:#fff3c4}
+.card{width:96px;min-height:104px;background:#fff;border:3px solid var(--line);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px;text-align:center;font-size:13px;font-weight:700;cursor:grab;user-select:none;touch-action:none}
+.card .ic{font-size:42px;line-height:1.1}
+.card img{width:48px;height:48px;object-fit:contain}
+.card.sel{border-color:var(--sun);box-shadow:0 0 0 4px var(--sun)}
+.card.drag{position:fixed;z-index:50;pointer-events:none;opacity:.9;transform:scale(1.08)}
+.card.ok{border-color:var(--ok);background:#e6f7ec}
+.card.bad{border-color:var(--bad);background:#fdeaea}
+
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.col{display:flex;flex-direction:column;gap:10px}
+.app{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--line);border-radius:16px;padding:8px 12px;cursor:pointer;font:inherit;font-weight:700;text-align:left;color:var(--ink)}
+.app .ic{font-size:36px}
+.app small{display:block;font-weight:500;color:#4b5b82;font-size:14px}
+.app.sel,.opt.sel{border-color:var(--sun);box-shadow:0 0 0 4px var(--sun)}
+.opt{background:#fff;border:3px solid var(--line);border-radius:16px;padding:10px 12px;cursor:pointer;font:inherit;text-align:left;color:var(--ink);min-height:62px}
+.opt.used{background:#e9eefb;color:#7a88ad}
+.app.ok{border-color:var(--ok);background:#e6f7ec}
+.app.bad{border-color:var(--bad);background:#fdeaea}
+
+.wins{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.win{border:3px solid var(--line);border-radius:16px;padding:12px;text-align:center}
+.win.ok{border-color:var(--ok);background:#e6f7ec}
+.win.bad{border-color:var(--bad);background:#fdeaea}
+.wb{display:inline-flex;width:64px;height:48px;align-items:center;justify-content:center;background:#e8edf7;border:2px solid #9aa9c9;border-radius:6px;margin:6px 0 10px;font-size:26px;font-weight:700;color:#1d2b4f}
+.wb.x:hover{background:#e81123;color:#fff}
+.sq{width:20px;height:20px;border:3px solid #1d2b4f;display:block}
+.rs{position:relative;width:24px;height:24px;display:block}
+.rs i{position:absolute;width:16px;height:16px;border:3px solid #1d2b4f;background:#e8edf7}
+.rs i:first-child{right:0;top:0}.rs i:last-child{left:0;bottom:0}
+select{font:inherit;width:100%;padding:8px;border-radius:12px;border:3px solid var(--blue);background:#fff;color:var(--ink)}
+
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.go,.re{font:inherit;font-weight:700;border:0;border-radius:30px;padding:12px 26px;cursor:pointer;font-size:19px}
+.go{background:var(--ok);color:#fff}
+.re{background:#e8edf7;color:var(--ink)}
+.msg{font-weight:700;font-size:20px}
+@media(max-width:640px){.zones{grid-template-columns:1fr}.pairs{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Μαθαίνω τον υπολογιστή</h1>
+  <p>Τρία κουίζ για μικρούς εξερευνητές</p>
+</header>
+<nav role="tablist" aria-label="Κουίζ">
+  <button role="tab" aria-selected="true" data-t="q1">Κουίζ 1: Ταξινόμηση</button>
+  <button role="tab" aria-selected="false" data-t="q2">Κουίζ 2: Τι κάνω;</button>
+  <button role="tab" aria-selected="false" data-t="q3">Κουίζ 3: Παράθυρο</button>
+</nav>
+<main>
+
+<section id="q1" class="on">
+  <h2>Εφαρμογή, αρχείο ή φάκελος;</h2>
+  <p class="hint">Τράβηξε κάθε εικονίδιο στο σωστό κουτί. (Ή πάτησε το εικονίδιο και μετά το κουτί.) Μετά πάτησε «Έλεγχος».</p>
+  <div class="tray" id="tray"></div>
+  <div class="zones">
+    <div class="zbox" data-z="app"><h3>Εφαρμογή</h3><div class="zone"></div></div>
+    <div class="zbox" data-z="file"><h3>Αρχείο</h3><div class="zone"></div></div>
+    <div class="zbox" data-z="folder"><h3>Φάκελος</h3><div class="zone"></div></div>
+  </div>
+  <div class="bar"><button class="go" id="c1">Έλεγχος</button><button class="re" id="r1">Ξανά από την αρχή</button><span class="msg" id="m1" role="status"></span></div>
+</section>
+
+<section id="q2">
+  <h2>Τι κάνω με αυτή την εφαρμογή;</h2>
+  <p class="hint">Πάτησε μια εφαρμογή και μετά πάτησε τι κάνω με αυτή. Μετά πάτησε «Έλεγχος».</p>
+  <div class="pairs"><div class="col" id="apps"></div><div class="col" id="opts"></div></div>
+  <div class="bar"><button class="go" id="c2">Έλεγχος</button><button class="re" id="r2">Ξανά από την αρχή</button><span class="msg" id="m2" role="status"></span></div>
+</section>
+
+<section id="q3">
+  <h2>Τα κουμπιά του παραθύρου</h2>
+  <p class="hint">Κάθε παράθυρο έχει κουμπιά πάνω δεξιά. Διάλεξε από τη λίστα τι κάνει το καθένα. Μετά πάτησε «Έλεγχος».</p>
+  <div class="wins" id="wins"></div>
+  <div class="bar"><button class="go" id="c3">Έλεγχος</button><button class="re" id="r3">Ξανά από την αρχή</button><span class="msg" id="m3" role="status"></span></div>
+</section>
+
+</main>
+<script>
+/* ============ ΔΕΔΟΜΕΝΑ ============
+   Για πραγματικά εικονίδια, βάλε τις εικόνες στον φάκελο images/ και
+   πρόσθεσε στο αντικείμενο:  img:"images/chrome.png"  (το emoji τότε αγνοείται) */
+const ITEMS=[
+  {n:"Google Chrome",ic:"🌐",t:"app"},
+  {n:"GCompris",ic:"🎮",t:"app"},
+  {n:"Tux Paint",ic:"🐧",t:"app"},
+  {n:"Ζωγραφιά",ic:"🖼️",t:"file"},
+  {n:"Η ιστορία μου",ic:"📄",t:"file"},
+  {n:"Τραγούδι",ic:"🎵",t:"file"},
+  {n:"Φωτογραφίες",ic:"📁",t:"folder"},
+  {n:"Τα έγγραφά μου",ic:"📁",t:"folder"}
+];
+const APPS=[
+  {n:"Google Chrome",ic:"🌐",a:"Βλέπω σελίδες στο διαδίκτυο"},
+  {n:"Tux Paint",ic:"🐧",a:"Ζωγραφίζω εικόνες"},
+  {n:"GCompris",ic:"🎮",a:"Παίζω και μαθαίνω"},
+  {n:"Word",ic:"📝",a:"Γράφω κείμενο"},
+  {n:"Αριθμομηχανή",ic:"🧮",a:"Κάνω πράξεις"}
+];
+const WINS=[
+  {s:"✕",cls:"x",a:"close",label:"Κουμπί 1"},
+  {s:"—",a:"min",label:"Κουμπί 2"},
+  {s:'<span class="sq"></span>',a:"max",label:"Κουμπί 3"},
+  {s:'<span class="rs"><i></i><i></i></span>',a:"restore",label:"Κουμπί 4"}
+];
+const CHOICES=[
+  ["close","Κλείσιμο – κλείνει το παράθυρο"],
+  ["min","Ελαχιστοποίηση – κρύβει το παράθυρο κάτω"],
+  ["max","Μεγιστοποίηση – γεμίζει όλη την οθόνη"],
+  ["restore","Επαναφορά – το κάνει πάλι μικρότερο"]
+];
+
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const icon=o=>o.img?`<img src="${o.img}" alt="">`:`<span class="ic" aria-hidden="true">${o.ic}</span>`;
+const say=(id,ok,tot)=>{const m=$(id);m.textContent=ok===tot?`Μπράβο! Όλα σωστά! 🎉 (${ok}/${tot})`:`Σωστά: ${ok} από ${tot}. Διόρθωσε τα κόκκινα και δοκίμασε ξανά.`;m.style.color=ok===tot?"var(--ok)":"var(--bad)"};
+
+/* ---------- Καρτέλες ---------- */
+$$("nav button").forEach(b=>b.onclick=()=>{
+  $$("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  $$("section").forEach(s=>s.classList.toggle("on",s.id===b.dataset.t));
+});
+
+/* ---------- ΚΟΥΙΖ 1 ---------- */
+const tray=$("#tray");let sel=null;
+function build1(){
+  $$(".zone").forEach(z=>z.innerHTML="");tray.innerHTML="";$("#m1").textContent="";sel=null;
+  shuffle(ITEMS).forEach(o=>{
+    const c=document.createElement("div");
+    c.className="card";c.tabIndex=0;c.dataset.t=o.t;c.innerHTML=icon(o)+`<span>${o.n}</span>`;
+    tray.append(c);
+  });
+}
+function zoneAt(x,y){const e=document.elementFromPoint(x,y);return e&&e.closest(".zbox, .tray")}
+function drop(card,target){
+  $$(".zbox").forEach(z=>z.classList.remove("hover"));
+  (target&&target.classList.contains("zbox")?$(".zone",target):tray).append(card);
+  card.classList.remove("ok","bad");
+}
+document.addEventListener("pointerdown",e=>{
+  const card=e.target.closest("#q1 .card");if(!card)return;
+  e.preventDefault();
+  const r=card.getBoundingClientRect(),dx=e.clientX-r.left,dy=e.clientY-r.top,sx=e.clientX,sy=e.clientY;
+  let moved=false,home=card.parentNode,next=card.nextSibling;
+  const mv=ev=>{
+    if(!moved&&Math.hypot(ev.clientX-sx,ev.clientY-sy)<8)return;
+    if(!moved){moved=true;card.classList.add("drag");card.style.width=r.width+"px"}
+    card.style.left=ev.clientX-dx+"px";card.style.top=ev.clientY-dy+"px";
+    const z=zoneAt(ev.clientX,ev.clientY);
+    $$(".zbox").forEach(b=>b.classList.toggle("hover",b===z));
+  };
+  const up=ev=>{
+    removeEventListener("pointermove",mv);removeEventListener("pointerup",up);removeEventListener("pointercancel",up);
+    if(moved){
+      card.classList.remove("drag");card.style.cssText="";
+      drop(card,zoneAt(ev.clientX,ev.clientY));
+    }else{
+      const was=sel===card;if(sel)sel.classList.remove("sel");
+      sel=was?null:card;if(sel)sel.classList.add("sel");
+    }
+  };
+  addEventListener("pointermove",mv);addEventListener("pointerup",up);addEventListener("pointercancel",up);
+});
+$$(".zbox").forEach(z=>z.addEventListener("click",e=>{
+  if(sel&&!e.target.closest(".card")){drop(sel,z);sel.classList.remove("sel");sel=null}
+}));
+tray.addEventListener("click",e=>{if(sel&&!e.target.closest(".card")){drop(sel,tray);sel.classList.remove("sel");sel=null}});
+$("#c1").onclick=()=>{
+  let ok=0;
+  $$("#q1 .card").forEach(c=>{
+    const z=c.closest(".zbox"),right=z&&z.dataset.z===c.dataset.t;
+    c.classList.remove("ok","bad");c.classList.add(right?"ok":"bad");if(right)ok++;
+  });
+  say("#m1",ok,ITEMS.length);
+};
+$("#r1").onclick=build1;build1();
+
+/* ---------- ΚΟΥΙΖ 2 ---------- */
+let pickApp=null,pickOpt=null,pairs={};
+function build2(){
+  pickApp=pickOpt=null;pairs={};$("#m2").textContent="";
+  $("#apps").innerHTML="";$("#opts").innerHTML="";
+  shuffle(APPS).forEach(o=>{
+    const b=document.createElement("button");b.className="app";b.dataset.n=o.n;
+    b.innerHTML=icon(o)+`<span>${o.n}<small></small></span>`;
+    b.onclick=()=>{pickApp=o.n;mark();tryPair()};$("#apps").append(b);
+  });
+  shuffle(APPS).forEach(o=>{
+    const b=document.createElement("button");b.className="opt";b.dataset.n=o.n;b.textContent=o.a;
+    b.onclick=()=>{pickOpt=o.n;mark();tryPair()};$("#opts").append(b);
+  });
+}
+function mark(){
+  $$("#apps .app").forEach(b=>{b.classList.toggle("sel",b.dataset.n===pickApp);b.classList.remove("ok","bad");
+    const t=pairs[b.dataset.n];$("small",b).textContent=t?"→ "+APPS.find(x=>x.n===t).a:""});
+  $$("#opts .opt").forEach(b=>{b.classList.toggle("sel",b.dataset.n===pickOpt);b.classList.toggle("used",Object.values(pairs).includes(b.dataset.n))});
+}
+function tryPair(){
+  if(pickApp&&pickOpt){
+    for(const k in pairs)if(pairs[k]===pickOpt)delete pairs[k];
+    pairs[pickApp]=pickOpt;pickApp=pickOpt=null;$("#m2").textContent="";
+  }
+  mark();
+}
+$("#c2").onclick=()=>{
+  let ok=0;
+  $$("#apps .app").forEach(b=>{
+    const right=pairs[b.dataset.n]===b.dataset.n;if(right)ok++;
+    b.classList.remove("sel","ok","bad");b.classList.add(right?"ok":"bad");
+  });
+  say("#m2",ok,APPS.length);
+};
+$("#r2").onclick=build2;build2();
+
+/* ---------- ΚΟΥΙΖ 3 ---------- */
+function build3(){
+  $("#m3").textContent="";
+  $("#wins").innerHTML="";
+  shuffle(WINS).forEach((w,i)=>{
+    const d=document.createElement("div");d.className="win";d.dataset.a=w.a;
+    d.innerHTML=`<div>${w.label}</div><div class="wb ${w.cls||""}" aria-hidden="true">${w.s}</div>
+      <select aria-label="${w.label}"><option value="">Διάλεξε…</option>${CHOICES.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join("")}</select>`;
+    $("#wins").append(d);
+  });
+  $$("#wins .win").forEach((d,i)=>{$("div",d).textContent="Κουμπί "+(i+1);$("select",d).setAttribute("aria-label","Κουμπί "+(i+1))});
+}
+$("#c3").onclick=()=>{
+  let ok=0;
+  $$("#wins .win").forEach(d=>{
+    const right=$("select",d).value===d.dataset.a;if(right)ok++;
+    d.classList.remove("ok","bad");d.classList.add(right?"ok":"bad");
+  });
+  say("#m3",ok,WINS.length);
+};
+$("#r3").onclick=build3;build3();
+</script>
+</body>
+</html>
