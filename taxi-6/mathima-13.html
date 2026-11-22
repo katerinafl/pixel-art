@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Katerina Filippaki">
+    <meta name="copyright" content="© 2026 Katerina Filippaki">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Μάθημα 13ο: Ρυθμίσεις υλικού-λογισμικού & αντιμετώπιση προβλημάτων</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Fredoka (για φιλικούς παιδικούς τίτλους) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Fredoka', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f0f7ff;
+            background-image: radial-gradient(#cbe3ff 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        /* Προσαρμοσμένα στυλ εκτύπωσης */
+        @media print {
+            body {
+                background: white !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .card-shadow {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                break-inside: avoid;
+            }
+        }
+        /* Ομαλές μεταβάσεις */
+        .option-label {
+            transition: all 0.2s ease;
+        }
+        .option-label:hover {
+            transform: translateX(3px);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased pb-16">
+
+    <!-- ΕΠΙΚΕΦΑΛΙΔΑ & ΣΤΟΙΧΕΙΑ ΜΑΘΗΤΗ -->
+    <header class="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 text-white shadow-lg rounded-b-3xl mb-8">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-center md:text-left">
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-sm font-semibold mb-3 tracking-wide">
+                        <span>💻 Πληροφορική ΣΤ' Δημοτικού</span>
+                        <span>•</span>
+                        <span>Μάθημα 13ο</span>
+                    </div>
+                    <h1 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold leading-tight drop-shadow-sm">
+                        Ρυθμίσεις υλικού-λογισμικού και αντιμετώπιση προβλημάτων λειτουργίας
+                    </h1>
+                    <p class="mt-2 text-blue-100 text-sm sm:text-base max-w-2xl">
+                        Διαδραστικό Φύλλο Εργασίας &amp; Εξάσκησης για το Εργαστήριο Πληροφορικής
+                    </p>
+                </div>
+
+                <!-- Κάρτα Στοιχείων Μαθητή -->
+                <div class="w-full md:w-80 bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl p-4 shadow-inner">
+                    <h2 class="text-xs uppercase tracking-wider font-bold text-blue-100 mb-3 flex items-center gap-1.5">
+                        <span>🧑‍🎓</span> Στοιχεία Μαθητή / Μαθήτριας
+                    </h2>
+                    <div class="space-y-2.5">
+                        <div>
+                            <label for="student-name" class="sr-only">Ονοματεπώνυμο</label>
+                            <input type="text" id="student-name" placeholder="Ονοματεπώνυμο..." 
+                                class="w-full px-3.5 py-2 rounded-xl bg-white text-slate-800 placeholder-slate-400 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label for="student-class" class="sr-only">Τμήμα</label>
+                                <input type="text" id="student-class" placeholder="Τμήμα (π.χ. ΣΤ1)" 
+                                    class="w-full px-3.5 py-2 rounded-xl bg-white text-slate-800 placeholder-slate-400 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm">
+                            </div>
+                            <div>
+                                <label for="student-date" class="sr-only">Ημερομηνία</label>
+                                <input type="text" id="student-date" 
+                                    class="w-full px-3 py-2 rounded-xl bg-white/90 text-slate-700 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm text-center">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 space-y-8">
+
+        <!-- ΕΙΣΑΓΩΓΗ - ΘΕΩΡΙΑ ΜΑΘΗΜΑΤΟΣ -->
+        <section class="bg-white rounded-3xl shadow-md border-2 border-amber-200 overflow-hidden card-shadow">
+            <div class="bg-gradient-to-r from-amber-100 to-yellow-100 px-6 py-4 border-b border-amber-200 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl sm:text-3xl bg-white p-2 rounded-2xl shadow-sm">💡</span>
+                    <div>
+                        <h2 class="font-display text-lg sm:text-xl font-bold text-amber-900">Τι μάθαμε στο Μάθημα 13ο (Σύντομη Θεωρία)</h2>
+                        <p class="text-xs sm:text-sm text-amber-800">Διάβασε προσεκτικά τα βασικά σημεία πριν ξεκινήσεις τις δραστηριότητες!</p>
+                    </div>
+                </div>
+                <button type="button" onclick="toggleTheory()" id="theory-toggle-btn" class="no-print text-xs sm:text-sm font-semibold bg-amber-500 hover:bg-amber-600 text-white px-3.5 py-2 rounded-xl transition shadow-sm">
+                    Απόκρυψη
+                </button>
+            </div>
+            
+            <div id="theory-content" class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 bg-amber-50/30">
+                <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm flex gap-3.5">
+                    <span class="text-2xl shrink-0">🖨️</span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Ρυθμίσεις περιφερειακών συσκευών</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                            Μέσα από τις <strong>Ρυθμίσεις</strong> (ή τον Πίνακα Ελέγχου) προσαρμόζουμε τη λειτουργία των συσκευών μας: την ποιότητα εκτύπωσης στον εκτυπωτή, την ταχύτητα του δείκτη στο ποντίκι, την ένταση του ήχου και την ανάλυση ή φωτεινότητα της οθόνης.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm flex gap-3.5">
+                    <span class="text-2xl shrink-0">🕒</span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Ρύθμιση ημερομηνίας και ώρας</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                            Μπορούμε να ορίσουμε ή να διορθώσουμε την <strong>ημερομηνία, την ώρα και τη ζώνη ώρας</strong> του υπολογιστή μας (αυτόματα μέσω διαδικτύου ή χειροκίνητα).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm flex gap-3.5">
+                    <span class="text-2xl shrink-0">📦</span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Εγκατάσταση &amp; απεγκατάσταση λογισμικού</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                            Κάνουμε <strong>εγκατάσταση</strong> (π.χ. από το Store/μπουτίκ λογισμικού) για να χρησιμοποιήσουμε νέες εφαρμογές, και <strong>απεγκατάσταση</strong> όσων δεν χρειαζόμαστε πια ώστε να <strong>ελευθερώνουμε χώρο</strong> στον δίσκο.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm flex gap-3.5">
+                    <span class="text-2xl shrink-0">🔧</span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Αντιμετώπιση απλών προβλημάτων</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                            Ελέγχουμε πρώτα τα πιο απλά αίτια (αν υπάρχει ρεύμα, αν είναι συνδεδεμένα τα καλώδια, αν είναι ανοιχτή η συσκευή ή το Wi-Fi) πριν ανησυχήσουμε.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-amber-100 shadow-sm flex gap-3.5 md:col-span-2">
+                    <span class="text-2xl shrink-0">🕵️</span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base">Βασικά βήματα εντοπισμού και επίλυσης προβλημάτων</h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                            <strong>1)</strong> Παρατηρούμε τι ακριβώς συμβαίνει. <strong>2)</strong> Διαβάζουμε και σημειώνουμε τυχόν μηνύματα σφάλματος. <strong>3)</strong> Δοκιμάζουμε απλές λύσεις (έλεγχος συνδέσεων, κλείσιμο εφαρμογής που «πάγωσε» ή επανεκκίνηση). <strong>4)</strong> Αν το πρόβλημα επιμένει, ζητάμε βοήθεια από ενήλικα ή τεχνικό.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ΔΡΑΣΤΗΡΙΟΤΗΤΑ 1 -->
+        <section id="act1-card" class="bg-white rounded-3xl shadow-md border-2 border-indigo-200 overflow-hidden card-shadow">
+            <div class="bg-indigo-50 px-6 py-4 border-b border-indigo-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-full bg-indigo-600 text-white font-display font-bold text-lg flex items-center justify-center shadow-sm">1</span>
+                    <div>
+                        <h2 class="font-display text-lg sm:text-xl font-bold text-indigo-950">Επιλέγω τη σωστή ρύθμιση για κάθε συσκευή</h2>
+                        <p class="text-xs sm:text-sm text-indigo-700">Διάλεξε από τη λίστα τη ρύθμιση που ταιριάζει σε κάθε συσκευή.</p>
+                    </div>
+                </div>
+                <span id="act1-badge" class="hidden px-3.5 py-1.5 rounded-full text-sm font-bold"></span>
+            </div>
+
+            <div class="p-6">
+                <!-- Τράπεζα Λέξεων -->
+                <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-3.5 mb-5 flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-800 mr-1">📚 Διαθέσιμες ρυθμίσεις:</span>
+                    <span class="px-3 py-1 bg-white border border-indigo-200 rounded-full text-xs sm:text-sm font-medium text-indigo-900 shadow-sm">ένταση</span>
+                    <span class="px-3 py-1 bg-white border border-indigo-200 rounded-full text-xs sm:text-sm font-medium text-indigo-900 shadow-sm">ταχύτητα δείκτη</span>
+                    <span class="px-3 py-1 bg-white border border-indigo-200 rounded-full text-xs sm:text-sm font-medium text-indigo-900 shadow-sm">ποιότητα εκτύπωσης</span>
+                    <span class="px-3 py-1 bg-white border border-indigo-200 rounded-full text-xs sm:text-sm font-medium text-indigo-900 shadow-sm">ημερομηνία και ώρα</span>
+                    <span class="px-3 py-1 bg-white border border-indigo-200 rounded-full text-xs sm:text-sm font-medium text-indigo-900 shadow-sm">ανάλυση/φωτεινότητα</span>
+                </div>
+
+                <div id="act1-items" class="space-y-3">
+                    <!-- Δημιουργείται δυναμικά με JS -->
+                </div>
+
+                <!-- Κουμπιά Ελέγχου -->
+                <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 no-print">
+                    <div class="flex flex-wrap gap-2.5">
+                        <button type="button" onclick="checkAct1()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-semibold rounded-xl shadow-sm transition flex items-center gap-2">
+                            <span>✅</span> Έλεγχος Δραστηριότητας 1
+                        </button>
+                        <button type="button" onclick="resetAct1()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition flex items-center gap-1.5">
+                            <span>🔄</span> Καθαρισμός
+                        </button>
+                    </div>
+                    <div id="act1-feedback" class="text-sm font-semibold"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ΔΡΑΣΤΗΡΙΟΤΗΤΑ 2 -->
+        <section id="act2-card" class="bg-white rounded-3xl shadow-md border-2 border-sky-200 overflow-hidden card-shadow">
+            <div class="bg-sky-50 px-6 py-4 border-b border-sky-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-full bg-sky-600 text-white font-display font-bold text-lg flex items-center justify-center shadow-sm">2</span>
+                    <div>
+                        <h2 class="font-display text-lg sm:text-xl font-bold text-sky-950">Βάζω σε σωστή σειρά τα βήματα εγκατάστασης από το Store</h2>
+                        <p class="text-xs sm:text-sm text-sky-700">Αρίθμησε τα βήματα από το 1 (πρώτο) έως το 5 (τελευταίο) και απάντησε στην ερώτηση με το αστέρι.</p>
+                    </div>
+                </div>
+                <span id="act2-badge" class="hidden px-3.5 py-1.5 rounded-full text-sm font-bold"></span>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <div id="act2-steps" class="space-y-3">
+                    <!-- Δημιουργείται δυναμικά με JS -->
+                </div>
+
+                <!-- Ερώτηση Αστεριού από το Φύλλο Εργασίας -->
+                <div id="act2-bonus-box" class="bg-amber-50/80 border-2 border-dashed border-amber-300 rounded-2xl p-5 transition-colors">
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="text-2xl">⭐</span>
+                        <div>
+                            <h3 class="font-bold text-amber-950 text-sm sm:text-base">Ερώτηση Αστεριού: Ποιο είναι το όφελος της απεγκατάστασης εφαρμογών που δεν χρησιμοποιούμε;</h3>
+                            <p class="text-xs text-amber-800">Επίλεξε τη σωστή απάντηση:</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 pl-2 sm:pl-9" id="act2-bonus-options">
+                        <label class="option-label flex items-center gap-3 p-2.5 rounded-xl bg-white border border-amber-200 cursor-pointer">
+                            <input type="radio" name="act2_bonus" value="space" class="w-4 h-4 text-sky-600 focus:ring-sky-500">
+                            <span class="text-sm font-medium text-slate-700">α) Ελευθερώνουμε αποθηκευτικό χώρο στον δίσκο.</span>
+                        </label>
+                        <label class="option-label flex items-center gap-3 p-2.5 rounded-xl bg-white border border-amber-200 cursor-pointer">
+                            <input type="radio" name="act2_bonus" value="screen" class="w-4 h-4 text-sky-600 focus:ring-sky-500">
+                            <span class="text-sm font-medium text-slate-700">β) Κάνουμε την οθόνη πιο φωτεινή.</span>
+                        </label>
+                        <label class="option-label flex items-center gap-3 p-2.5 rounded-xl bg-white border border-amber-200 cursor-pointer">
+                            <input type="radio" name="act2_bonus" value="time" class="w-4 h-4 text-sky-600 focus:ring-sky-500">
+                            <span class="text-sm font-medium text-slate-700">γ) Αλλάζουμε την ημερομηνία και την ώρα.</span>
+                        </label>
+                    </div>
+                    <div id="act2-bonus-msg" class="mt-2 pl-2 sm:pl-9 text-xs sm:text-sm font-semibold"></div>
+                </div>
+
+                <!-- Κουμπιά Ελέγχου -->
+                <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 no-print">
+                    <div class="flex flex-wrap gap-2.5">
+                        <button type="button" onclick="checkAct2()" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 active:scale-95 text-white font-semibold rounded-xl shadow-sm transition flex items-center gap-2">
+                            <span>✅</span> Έλεγχος Δραστηριότητας 2
+                        </button>
+                        <button type="button" onclick="resetAct2()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition flex items-center gap-1.5">
+                            <span>🔄</span> Καθαρισμός
+                        </button>
+                    </div>
+                    <div id="act2-feedback" class="text-sm font-semibold"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ΔΡΑΣΤΗΡΙΟΤΗΤΑ 3 -->
+        <section id="act3-card" class="bg-white rounded-3xl shadow-md border-2 border-emerald-200 overflow-hidden card-shadow">
+            <div class="bg-emerald-50 px-6 py-4 border-b border-emerald-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-full bg-emerald-600 text-white font-display font-bold text-lg flex items-center justify-center shadow-sm">3</span>
+                    <div>
+                        <h2 class="font-display text-lg sm:text-xl font-bold text-emerald-950">Αντιστοιχίζω κάθε πρόβλημα με τις σωστές ενέργειες αντιμετώπισης</h2>
+                        <p class="text-xs sm:text-sm text-emerald-700">Διάλεξε για κάθε πρόβλημα την κατάλληλη ενέργεια αντιμετώπισης (Α - ΣΤ).</p>
+                    </div>
+                </div>
+                <span id="act3-badge" class="hidden px-3.5 py-1.5 rounded-full text-sm font-bold"></span>
+            </div>
+
+            <div class="p-6">
+                <!-- Πίνακας αναφοράς ενεργειών (βοηθητικός) -->
+                <div class="bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4 mb-5">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-800 mb-2.5">🛠️ Ενέργειες Αντιμετώπισης:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs sm:text-sm text-slate-700">
+                        <div class="bg-white px-3 py-2 rounded-xl border border-emerald-100"><strong class="text-emerald-700">Α.</strong> Ελέγχω καλώδια, ένταση ήχου, σωστή συσκευή εξόδου.</div>
+                        <div class="bg-white px-3 py-2 rounded-xl border border-emerald-100"><strong class="text-emerald-700">Β.</strong> Ελέγχω ρεύμα, καλώδια, κουμπί τροφοδοσίας.</div>
+                        <div class="bg-white px-3 py-2 rounded-xl border border-emerald-100"><strong class="text-emerald-700">Γ.</strong> Ελέγχω σύνδεση καλωδίου/ρυθμίσεις της συσκευής.</div>
+                        <div class="bg-white px-3 py-2 rounded-xl border border-emerald-100"><strong class="text-emerald-700">Δ.</strong> Ελέγχω καλώδιο δικτύου ή Wi-Fi, router, επανεκκίνηση.</div>
+                        <div class="bg-white px-3 py-2 rounded-xl border border-emerald-100"><strong class="text-emerald-700">Ε.</strong> Σημειώνω το μήνυμα και επικοινωνώ με τεχνικό.</div>
+                        <div class="bg-white px-3 py-2 rounded-xl border border-emerald-100"><strong class="text-emerald-700">ΣΤ.</strong> Ελέγχω καλώδιο οθόνης, αν είναι πατημένο το κουμπί της οθόνης.</div>
+                    </div>
+                </div>
+
+                <div id="act3-items" class="space-y-3">
+                    <!-- Δημιουργείται δυναμικά με JS -->
+                </div>
+
+                <!-- Κουμπιά Ελέγχου -->
+                <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 no-print">
+                    <div class="flex flex-wrap gap-2.5">
+                        <button type="button" onclick="checkAct3()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold rounded-xl shadow-sm transition flex items-center gap-2">
+                            <span>✅</span> Έλεγχος Δραστηριότητας 3
+                        </button>
+                        <button type="button" onclick="resetAct3()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition flex items-center gap-1.5">
+                            <span>🔄</span> Καθαρισμός
+                        </button>
+                    </div>
+                    <div id="act3-feedback" class="text-sm font-semibold"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ΔΡΑΣΤΗΡΙΟΤΗΤΑ 4 -->
+        <section id="act4-card" class="bg-white rounded-3xl shadow-md border-2 border-orange-200 overflow-hidden card-shadow">
+            <div class="bg-orange-50 px-6 py-4 border-b border-orange-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-full bg-orange-500 text-white font-display font-bold text-lg flex items-center justify-center shadow-sm">4</span>
+                    <div>
+                        <h2 class="font-display text-lg sm:text-xl font-bold text-orange-950">Πολλαπλής επιλογής: Επιλέγω τη σωστή απάντηση</h2>
+                        <p class="text-xs sm:text-sm text-orange-800">Κάνε κλικ στη σωστή επιλογή (α, β ή γ) για κάθε ερώτηση.</p>
+                    </div>
+                </div>
+                <span id="act4-badge" class="hidden px-3.5 py-1.5 rounded-full text-sm font-bold"></span>
+            </div>
+
+            <div class="p-6">
+                <div id="act4-items" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Δημιουργείται δυναμικά με JS -->
+                </div>
+
+                <!-- Κουμπιά Ελέγχου -->
+                <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 no-print">
+                    <div class="flex flex-wrap gap-2.5">
+                        <button type="button" onclick="checkAct4()" class="px-5 py-2.5 bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-semibold rounded-xl shadow-sm transition flex items-center gap-2">
+                            <span>✅</span> Έλεγχος Δραστηριότητας 4
+                        </button>
+                        <button type="button" onclick="resetAct4()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition flex items-center gap-1.5">
+                            <span>🔄</span> Καθαρισμός
+                        </button>
+                    </div>
+                    <div id="act4-feedback" class="text-sm font-semibold"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ΔΡΑΣΤΗΡΙΟΤΗΤΑ 5 -->
+        <section id="act5-card" class="bg-white rounded-3xl shadow-md border-2 border-purple-200 overflow-hidden card-shadow">
+            <div class="bg-purple-50 px-6 py-4 border-b border-purple-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-full bg-purple-600 text-white font-display font-bold text-lg flex items-center justify-center shadow-sm">5</span>
+                    <div>
+                        <h2 class="font-display text-lg sm:text-xl font-bold text-purple-950">Σωστό (Σ) ή Λάθος (Λ)</h2>
+                        <p class="text-xs sm:text-sm text-purple-700">Διάβασε κάθε πρόταση και επίλεξε αν είναι Σωστή (Σ) ή Λάθος (Λ).</p>
+                    </div>
+                </div>
+                <span id="act5-badge" class="hidden px-3.5 py-1.5 rounded-full text-sm font-bold"></span>
+            </div>
+
+            <div class="p-6">
+                <div id="act5-items" class="space-y-3">
+                    <!-- Δημιουργείται δυναμικά με JS -->
+                </div>
+
+                <!-- Κουμπιά Ελέγχου -->
+                <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 no-print">
+                    <div class="flex flex-wrap gap-2.5">
+                        <button type="button" onclick="checkAct5()" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-700 active:scale-95 text-white font-semibold rounded-xl shadow-sm transition flex items-center gap-2">
+                            <span>✅</span> Έλεγχος Δραστηριότητας 5
+                        </button>
+                        <button type="button" onclick="resetAct5()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition flex items-center gap-1.5">
+                            <span>🔄</span> Καθαρισμός
+                        </button>
+                    </div>
+                    <div id="act5-feedback" class="text-sm font-semibold"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ΔΡΑΣΤΗΡΙΟΤΗΤΑ 6: ΣΕΝΑΡΙΑ ΕΠΙΛΥΣΗΣ ΠΡΟΒΛΗΜΑΤΩΝ -->
+        <section id="act6-card" class="bg-white rounded-3xl shadow-md border-2 border-rose-200 overflow-hidden card-shadow">
+            <div class="bg-gradient-to-r from-rose-50 to-pink-50 px-6 py-4 border-b border-rose-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-full bg-rose-600 text-white font-display font-bold text-lg flex items-center justify-center shadow-sm">6</span>
+                    <div>
+                        <h2 class="font-display text-lg sm:text-xl font-bold text-rose-950">Σενάρια Επίλυσης Προβλημάτων</h2>
+                        <p class="text-xs sm:text-sm text-rose-800">Διάβασε προσεκτικά κάθε καθημερινό σενάριο και διάλεξε τη σωστή ενέργεια από τις 3 πιθανές λύσεις!</p>
+                    </div>
+                </div>
+                <span id="act6-badge" class="hidden px-3.5 py-1.5 rounded-full text-sm font-bold"></span>
+            </div>
+
+            <div class="p-6">
+                <div id="act6-items" class="space-y-5">
+                    <!-- Δημιουργείται δυναμικά με JS -->
+                </div>
+
+                <!-- Κουμπιά Ελέγχου -->
+                <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 no-print">
+                    <div class="flex flex-wrap gap-2.5">
+                        <button type="button" onclick="checkAct6()" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-semibold rounded-xl shadow-sm transition flex items-center gap-2">
+                            <span>✅</span> Έλεγχος Δραστηριότητας 6
+                        </button>
+                        <button type="button" onclick="resetAct6()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition flex items-center gap-1.5">
+                            <span>🔄</span> Καθαρισμός
+                        </button>
+                    </div>
+                    <div id="act6-feedback" class="text-sm font-semibold"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ΣΥΝΟΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ & ΕΝΕΡΓΕΙΕΣ -->
+        <section class="bg-gradient-to-br from-slate-800 via-slate-900 to-indigo-950 text-white rounded-3xl shadow-xl p-6 sm:p-8 card-shadow">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="text-center md:text-left">
+                    <h2 class="font-display text-2xl font-bold flex items-center justify-center md:justify-start gap-2.5">
+                        <span>🏆</span> Συνολική Επίδοση Μαθήματος
+                    </h2>
+                    <p class="text-slate-300 text-sm mt-1">
+                        Πάτησε «Έλεγχος Όλων» για να δεις τη συνολική σου βαθμολογία σε όλες τις δραστηριότητες!
+                    </p>
+                    <div id="total-message" class="mt-3 text-sm font-medium text-amber-300"></div>
+                </div>
+
+                <!-- Πίνακας Βαθμολογίας -->
+                <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl px-6 py-4 text-center min-w-[210px]">
+                    <div class="text-xs uppercase tracking-wider text-slate-300 font-semibold">Συνολικό Σκορ</div>
+                    <div class="font-display text-3xl sm:text-4xl font-bold text-amber-400 mt-1">
+                        <span id="total-score">0</span> <span class="text-xl text-slate-300">/ <span id="max-total-score">34</span></span>
+                    </div>
+                    <div id="total-percent" class="text-xs text-slate-300 mt-1">Ολοκληρώθηκαν: 0 / 6 δραστηριότητες</div>
+                </div>
+            </div>
+
+            <!-- Μικρή σύνοψη ανά δραστηριότητα -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 mt-6 pt-6 border-t border-white/10 text-center text-xs">
+                <div class="bg-white/5 rounded-xl p-2.5 border border-white/10">
+                    <div class="text-slate-400">Δραστ. 1</div>
+                    <div id="sum-act1" class="font-bold text-sm mt-0.5 text-slate-200">- / 5</div>
+                </div>
+                <div class="bg-white/5 rounded-xl p-2.5 border border-white/10">
+                    <div class="text-slate-400">Δραστ. 2</div>
+                    <div id="sum-act2" class="font-bold text-sm mt-0.5 text-slate-200">- / 6</div>
+                </div>
+                <div class="bg-white/5 rounded-xl p-2.5 border border-white/10">
+                    <div class="text-slate-400">Δραστ. 3</div>
+                    <div id="sum-act3" class="font-bold text-sm mt-0.5 text-slate-200">- / 6</div>
+                </div>
+                <div class="bg-white/5 rounded-xl p-2.5 border border-white/10">
+                    <div class="text-slate-400">Δραστ. 4</div>
+                    <div id="sum-act4" class="font-bold text-sm mt-0.5 text-slate-200">- / 4</div>
+                </div>
+                <div class="bg-white/5 rounded-xl p-2.5 border border-white/10">
+                    <div class="text-slate-400">Δραστ. 5</div>
+                    <div id="sum-act5" class="font-bold text-sm mt-0.5 text-slate-200">- / 8</div>
+                </div>
+                <div class="bg-white/5 rounded-xl p-2.5 border border-white/10">
+                    <div class="text-slate-400">Δραστ. 6</div>
+                    <div id="sum-act6" class="font-bold text-sm mt-0.5 text-slate-200">- / 5</div>
+                </div>
+            </div>
+
+            <!-- Κουμπιά Τελικών Ενεργειών -->
+            <div class="mt-6 flex flex-wrap items-center justify-center md:justify-end gap-3 no-print">
+                <button type="button" onclick="checkAll()" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2">
+                    <span>🎯</span> Έλεγχος Όλων
+                </button>
+                <button type="button" onclick="window.print()" class="px-5 py-2.5 bg-blue-500 hover:bg-blue-600 active:scale-95 text-white font-semibold rounded-xl shadow-md transition flex items-center gap-2">
+                    <span>🖨️</span> Εκτύπωση / Αποθήκευση PDF
+                </button>
+                <button type="button" onclick="showResetModal()" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-slate-200 font-medium rounded-xl transition flex items-center gap-1.5">
+                    <span>🗑️</span> Επαναφορά Όλων
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Προσαρμοσμένο Modal Επιβεβαίωσης Επαναφοράς (χωρίς χρήση confirm()) -->
+    <div id="reset-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4 no-print">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 text-center">
+            <div class="w-14 h-14 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-3xl mx-auto mb-4">⚠️</div>
+            <h3 class="font-display text-xl font-bold text-slate-900">Επαναφορά όλων των απαντήσεων;</h3>
+            <p class="text-sm text-slate-600 mt-2">
+                Θέλεις σίγουρα να διαγράψεις όλες τις επιλογές σου και να ξεκινήσεις το φύλλο εργασίας από την αρχή;
+            </p>
+            <div class="mt-6 flex items-center justify-center gap-3">
+                <button type="button" onclick="closeResetModal()" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">
+                    Άκυρο
+                </button>
+                <button type="button" onclick="confirmResetAll()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold shadow-sm transition">
+                    Ναι, Επαναφορά
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // ΔΕΔΟΜΕΝΑ ΔΡΑΣΤΗΡΙΟΤΗΤΩΝ
+        // ==========================================
+
+        // Δραστηριότητα 1: Συσκευές & Ρυθμίσεις
+        const act1Options = [
+            "ένταση",
+            "ταχύτητα δείκτη",
+            "ποιότητα εκτύπωσης",
+            "ημερομηνία και ώρα",
+            "ανάλυση/φωτεινότητα"
+        ];
+
+        const act1Data = [
+            { id: "dev1", icon: "🖨️", label: "Εκτυπωτής", answer: "ποιότητα εκτύπωσης" },
+            { id: "dev2", icon: "🖱️", label: "Ποντίκι", answer: "ταχύτητα δείκτη" },
+            { id: "dev3", icon: "🔊", label: "Ήχος", answer: "ένταση" },
+            { id: "dev4", icon: "📅", label: "Ημερομηνία & ώρα", answer: "ημερομηνία και ώρα" },
+            { id: "dev5", icon: "🖥️", label: "Οθόνη", answer: "ανάλυση/φωτεινότητα" }
+        ];
+
+        // Δραστηριότητα 2: Βήματα Εγκατάστασης από το Store
+        const act2Data = [
+            { id: "stepA", letter: "Α.", text: "Πατάω «Λήψη» ή «Εγκατάσταση».", correctOrder: 2 },
+            { id: "stepB", letter: "Β.", text: "Αναζητώ την εφαρμογή που θέλω.", correctOrder: 1 },
+            { id: "stepC", letter: "Γ.", text: "Περιμένω να ολοκληρωθεί η εγκατάσταση.", correctOrder: 3 },
+            { id: "stepD", letter: "Δ.", text: "Ανοίγω την εφαρμογή από το εικονίδιο.", correctOrder: 5 },
+            { id: "stepE", letter: "Ε.", text: "Ελέγχω ότι εγκαταστάθηκε σωστά.", correctOrder: 4 }
+        ];
+
+        // Δραστηριότητα 3: Αντιστοίχιση Προβλημάτων & Ενεργειών
+        const act3Actions = [
+            { code: "Α", text: "Α. Ελέγχω καλώδια, ένταση ήχου, σωστή συσκευή εξόδου." },
+            { code: "Β", text: "Β. Ελέγχω ρεύμα, καλώδια, κουμπί τροφοδοσίας." },
+            { code: "Γ", text: "Γ. Ελέγχω σύνδεση καλωδίου/ρυθμίσεις της συσκευής." },
+            { code: "Δ", text: "Δ. Ελέγχω καλώδιο δικτύου ή Wi-Fi, router, επανεκκίνηση." },
+            { code: "Ε", text: "Ε. Σημειώνω το μήνυμα και επικοινωνώ με τεχνικό." },
+            { code: "ΣΤ", text: "ΣΤ. Ελέγχω καλώδιο οθόνης, αν είναι πατημένο το κουμπί της οθόνης." }
+        ];
+
+        const act3Data = [
+            { id: "prob1", num: "1.", problem: "Δεν ανοίγει ο υπολογιστής.", correct: "Β" },
+            { id: "prob2", num: "2.", problem: "Η οθόνη είναι μαύρη, αλλά ο υπολογιστής λειτουργεί.", correct: "ΣΤ" },
+            { id: "prob3", num: "3.", problem: "Εμφανίζεται μήνυμα σφάλματος.", correct: "Ε" },
+            { id: "prob4", num: "4.", problem: "Δεν συνδέεται στο διαδίκτυο.", correct: "Δ" },
+            { id: "prob5", num: "5.", problem: "Δεν ακούγεται ήχος.", correct: "Α" },
+            { id: "prob6", num: "6.", problem: "Κάποια συσκευή δεν λειτουργεί.", correct: "Γ" }
+        ];
+
+        // Δραστηριότητα 4: Πολλαπλής Επιλογής
+        const act4Data = [
+            {
+                id: "mc1",
+                letter: "α)",
+                question: "Για να ρυθμίσω το υλικό του υπολογιστή χρησιμοποιώ συνήθως:",
+                options: [
+                    { key: "a", text: "α. το Word" },
+                    { key: "b", text: "β. το Κέντρο ελέγχου / Ρυθμίσεις" },
+                    { key: "c", text: "γ. τον φυλλομετρητή" }
+                ],
+                correct: "b"
+            },
+            {
+                id: "mc2",
+                letter: "β)",
+                question: "Η μνήμη (RAM) μετριέται συνήθως σε:",
+                options: [
+                    { key: "a", text: "α. Hz" },
+                    { key: "b", text: "β. GB" },
+                    { key: "c", text: "γ. inch" }
+                ],
+                correct: "b"
+            },
+            {
+                id: "mc3",
+                letter: "γ)",
+                question: "Η εγκατάσταση μιας εφαρμογής μας δίνει τη δυνατότητα να:",
+                options: [
+                    { key: "a", text: "α. διαγράψουμε αρχεία" },
+                    { key: "b", text: "β. χρησιμοποιήσουμε για πρώτη φορά την εφαρμογή" },
+                    { key: "c", text: "γ. αλλάξουμε την ταχύτητα του ίντερνετ" }
+                ],
+                correct: "b"
+            },
+            {
+                id: "mc4",
+                letter: "δ)",
+                question: "Ποια από τα παρακάτω είναι πρόβλημα λειτουργίας;",
+                options: [
+                    { key: "a", text: "α. Η οθόνη έχει μεγάλη ανάλυση" },
+                    { key: "b", text: "β. Ο εκτυπωτής λειτουργεί γρήγορα" },
+                    { key: "c", text: "γ. Δεν υπάρχει σύνδεση στο διαδίκτυο" }
+                ],
+                correct: "c"
+            }
+        ];
+
+        // Δραστηριότητα 5: Σωστό ή Λάθος
+        const act5Data = [
+            { id: "tf1", num: "1.", statement: "Ο δρομολογητής (router) επιτρέπει τη σύνδεση στο διαδίκτυο.", correct: "Σ", hint: "Σωστό! Το router συνδέει τις συσκευές μας με το διαδίκτυο." },
+            { id: "tf2", num: "2.", statement: "Η απεγκατάσταση εφαρμογών ελευθερώνει χώρο στον δίσκο.", correct: "Σ", hint: "Σωστό! Διαγράφονται τα αρχεία της εφαρμογής και κερδίζουμε χώρο." },
+            { id: "tf3", num: "3.", statement: "Δεν μπορούμε να αλλάξουμε την ημερομηνία και ώρα του υπολογιστή.", correct: "Λ", hint: "Λάθος! Μπορούμε να τις αλλάξουμε από τις Ρυθμίσεις / Πίνακα Ελέγχου." },
+            { id: "tf4", num: "4.", statement: "Αν λάβουμε μήνυμα σφάλματος, δεν χρειάζεται να κάνουμε τίποτα.", correct: "Λ", hint: "Λάθος! Πρέπει να το διαβάσουμε, να το σημειώσουμε και να ζητήσουμε βοήθεια αν χρειάζεται." },
+            { id: "tf5", num: "5.", statement: "Για να αλλάξουμε τη ρύθμιση του ήχου, χρησιμοποιούμε το Κέντρο ελέγχου.", correct: "Σ", hint: "Σωστό! Από το Κέντρο ελέγχου / Ρυθμίσεις ρυθμίζουμε τον ήχο." },
+            { id: "tf6", num: "6.", statement: "Η ταχύτητα του ποντικιού σχετίζεται με την κίνηση του δείκτη.", correct: "Σ", hint: "Σωστό! Καθορίζει πόσο γρήγορα κινείται ο δείκτης στην οθόνη." },
+            { id: "tf7", num: "7.", statement: "Οι ενημερώσεις του συστήματος βοηθούν στη σωστή λειτουργία του υπολογιστή.", correct: "Σ", hint: "Σωστό! Διορθώνουν σφάλματα και βελτιώνουν την ασφάλεια." },
+            { id: "tf8", num: "8.", statement: "Η εγκατάσταση εφαρμογών γίνεται μόνο από το Store ή «μπουτίκ λογισμικού».", correct: "Λ", hint: "Λάθος! Μπορεί να γίνει και από αρχείο εγκατάστασης (π.χ. από το διαδίκτυο ή USB)." }
+        ];
+
+        // Δραστηριότητα 6: Σενάρια Επίλυσης Προβλημάτων
+        const act6Data = [
+            {
+                id: "sc1",
+                num: "Σενάριο 1",
+                icon: "🖥️",
+                story: "Ο Νίκος πατάει το κουμπί εκκίνησης αλλά η οθόνη είναι μαύρη. Τι κάνει πρώτα;",
+                options: [
+                    { key: "A", text: "Αγοράζει αμέσως καινούργια οθόνη." },
+                    { key: "B", text: "Ελέγχει αν είναι αναμμένη η οθόνη και αν είναι καλά συνδεδεμένο το καλώδιό της." },
+                    { key: "C", text: "Απεγκαθιστά όλα τα προγράμματα του υπολογιστή." }
+                ],
+                correct: "B",
+                explanation: "Ξεκινάμε πάντα από τους απλούς ελέγχους: βλέπουμε αν το κουμπί της οθόνης είναι ανοιχτό και αν το καλώδιο ρεύματος/εικόνας είναι σωστά συνδεδεμένο."
+            },
+            {
+                id: "sc2",
+                num: "Σενάριο 2",
+                icon: "🌐",
+                story: "Η Μαρία δεν μπορεί να μπει στο internet αλλά ο υπολογιστής λειτουργεί. Ποια βήματα ακολουθεί;",
+                options: [
+                    { key: "A", text: "Ελέγχει αν είναι ενεργοποιημένο το Wi-Fi (ή το καλώδιο δικτύου) και αν λειτουργεί σωστά το router." },
+                    { key: "B", text: "Αυξάνει την ένταση των ηχείων και αλλάζει την ανάλυση της οθόνης." },
+                    { key: "C", text: "Αλλάζει την ταχύτητα του δείκτη του ποντικιού." }
+                ],
+                correct: "A",
+                explanation: "Όταν δεν έχουμε διαδίκτυο, ελέγχουμε τη σύνδεση Wi-Fi ή το καλώδιο δικτύου και τα λαμπάκια του δρομολογητή (router)."
+            },
+            {
+                id: "sc3",
+                num: "Σενάριο 3",
+                icon: "🎮",
+                story: "Ένα παιχνίδι δεν ανοίγει. Ο Γιώργης πιστεύει ότι χρειάζεται να επανεκκινήσει αμέσως. Τι να κάνει;",
+                options: [
+                    { key: "A", text: "Να κλείσει τον υπολογιστή βγάζοντας το καλώδιο από την πρίζα." },
+                    { key: "B", text: "Να διαβάσει πρώτα αν εμφανίζεται κάποιο μήνυμα σφάλματος, να ελέγξει αν το παιχνίδι εγκαταστάθηκε σωστά και μετά, αν χρειαστεί, να κάνει επανεκκίνηση." },
+                    { key: "C", text: "Να αλλάξει την ημερομηνία και την ώρα του υπολογιστή." }
+                ],
+                correct: "B",
+                explanation: "Πριν από την επανεκκίνηση, παρατηρούμε αν υπάρχει κάποιο μήνυμα σφάλματος που εξηγεί τι φταίει (π.χ. ελλιπής εγκατάσταση). Ποτέ δεν βγάζουμε απότομα το καλώδιο!"
+            },
+            {
+                id: "sc4",
+                num: "Σενάριο 4",
+                icon: "🖨️",
+                story: "Εκτυπώνεις, μα ο εκτυπωτής δεν ανταποκρίνεται. Τι να κάνεις;",
+                options: [
+                    { key: "A", text: "Να ελέγξεις αν ο εκτυπωτής είναι ανοιχτός, αν έχει χαρτί/μελάνι και αν είναι σωστά συνδεδεμένος με τον υπολογιστή." },
+                    { key: "B", text: "Να πατήσεις 20 φορές συνεχόμενα το κουμπί «Εκτύπωση»." },
+                    { key: "C", text: "Να απεγκαταστήσεις τον φυλλομετρητή (browser)." }
+                ],
+                correct: "A",
+                explanation: "Ελέγχουμε αν ο εκτυπωτής έχει ρεύμα, χαρτί και σύνδεση (USB ή Wi-Fi). Αν πατήσουμε πολλές φορές «Εκτύπωση», απλώς θα γεμίσουμε την ουρά εκτύπωσης!"
+            },
+            {
+                id: "sc5",
+                num: "Σενάριο 5",
+                icon: "❄️",
+                story: "Ένα παιχνίδι «πάγωσε» και δεν κλείνει. Τι να κάνεις;",
+                options: [
+                    { key: "A", text: "Να περιμένεις λίγα δευτερόλεπτα και αν συνεχίζει να μην αποκρίνεται, να κλείσεις την εφαρμογή από τη Διαχείριση Εργασιών (ή να κάνεις επανεκκίνηση)." },
+                    { key: "B", text: "Να χαμηλώσεις τη φωτεινότητα της οθόνης στο μηδέν." },
+                    { key: "C", text: "Να αποσυνδέσεις το ποντίκι και το πληκτρολόγιο." }
+                ],
+                correct: "A",
+                explanation: "Όταν μια εφαρμογή «παγώσει», περιμένουμε λίγο μήπως ξεμπλοκάρει και έπειτα την τερματίζουμε με ασφάλεια μέσω της Διαχείρισης Εργασιών (Ctrl + Alt + Del)."
+            }
+        ];
+
+        // Κατάσταση βαθμολογιών ανά δραστηριότητα
+        const scores = {
+            act1: null,
+            act2: null,
+            act3: null,
+            act4: null,
+            act5: null,
+            act6: null
+        };
+
+        const maxScores = {
+            act1: 5,
+            act2: 6,
+            act3: 6,
+            act4: 4,
+            act5: 8,
+            act6: 5
+        };
+
+        // ==========================================
+        // ΑΡΧΙΚΟΠΟΙΗΣΗ & RENDERING UI
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", () => {
+            // Αυτόματη σημερινή ημερομηνία
+            const today = new Date();
+            const formattedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+            document.getElementById("student-date").value = formattedDate;
+
+            renderAct1();
+            renderAct2();
+            renderAct3();
+            renderAct4();
+            renderAct5();
+            renderAct6();
+        });
+
+        function toggleTheory() {
+            const content = document.getElementById("theory-content");
+            const btn = document.getElementById("theory-toggle-btn");
+            if (content.classList.contains("hidden")) {
+                content.classList.remove("hidden");
+                btn.textContent = "Απόκρυψη";
+            } else {
+                content.classList.add("hidden");
+                btn.textContent = "Εμφάνιση Θεωρίας";
+            }
+        }
+
+        // --- Render Δραστηριότητας 1 ---
+        function renderAct1() {
+            const container = document.getElementById("act1-items");
+            container.innerHTML = act1Data.map(item => `
+                <div id="row-${item.id}" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50/60 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl bg-white w-11 h-11 rounded-xl flex items-center justify-center shadow-sm border border-slate-100">${item.icon}</span>
+                        <span class="font-bold text-slate-800 text-base">${item.label}</span>
+                    </div>
+                    <div class="flex flex-col sm:items-end gap-1 w-full sm:w-auto">
+                        <select id="sel-${item.id}" onchange="clearRowFeedback('row-${item.id}', 'msg-${item.id}')" 
+                            class="w-full sm:w-64 px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm cursor-pointer">
+                            <option value="">-- Επίλεξε ρύθμιση --</option>
+                            ${act1Options.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+                        </select>
+                        <div id="msg-${item.id}" class="text-xs font-semibold hidden"></div>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // --- Render Δραστηριότητας 2 ---
+        function renderAct2() {
+            const container = document.getElementById("act2-steps");
+            container.innerHTML = act2Data.map(item => `
+                <div id="row-${item.id}" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50/60 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <select id="sel-${item.id}" onchange="clearRowFeedback('row-${item.id}', 'msg-${item.id}')"
+                            aria-label="Σειρά για το βήμα ${item.letter}"
+                            class="w-20 px-2.5 py-2 rounded-xl border-2 border-sky-200 bg-white text-sky-900 font-display font-bold text-base text-center focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm cursor-pointer">
+                            <option value="">#</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <span class="font-bold text-sky-700">${item.letter}</span>
+                        <span class="font-medium text-slate-800 text-sm sm:text-base">${item.text}</span>
+                    </div>
+                    <div id="msg-${item.id}" class="text-xs font-semibold hidden sm:text-right"></div>
+                </div>
+            `).join("");
+        }
+
+        // --- Render Δραστηριότητας 3 ---
+        function renderAct3() {
+            const container = document.getElementById("act3-items");
+            container.innerHTML = act3Data.map(item => `
+                <div id="row-${item.id}" class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50/60 transition-colors">
+                    <div class="flex items-start sm:items-center gap-2.5">
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-xs shrink-0">${item.num}</span>
+                        <span class="font-semibold text-slate-800 text-sm sm:text-base">${item.problem}</span>
+                    </div>
+                    <div class="flex flex-col lg:items-end gap-1 w-full lg:w-auto">
+                        <select id="sel-${item.id}" onchange="clearRowFeedback('row-${item.id}', 'msg-${item.id}')"
+                            class="w-full lg:w-[430px] px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-800 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm cursor-pointer">
+                            <option value="">-- Διάλεξε ενέργεια αντιμετώπισης --</option>
+                            ${act3Actions.map(act => `<option value="${act.code}">${act.text}</option>`).join("")}
+                        </select>
+                        <div id="msg-${item.id}" class="text-xs font-semibold hidden"></div>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // --- Render Δραστηριότητας 4 ---
+        function renderAct4() {
+            const container = document.getElementById("act4-items");
+            container.innerHTML = act4Data.map(q => `
+                <div id="box-${q.id}" class="p-4 rounded-2xl border-2 border-slate-100 bg-slate-50/60 flex flex-col justify-between transition-colors">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm sm:text-base mb-3">
+                            <span class="text-orange-600 mr-1">${q.letter}</span> ${q.question}
+                        </h3>
+                        <div class="space-y-2">
+                            ${q.options.map(opt => `
+                                <label id="lbl-${q.id}-${opt.key}" class="option-label flex items-center gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer">
+                                    <input type="radio" name="${q.id}" value="${opt.key}" onchange="clearBoxFeedback('box-${q.id}', 'msg-${q.id}')"
+                                        class="w-4 h-4 text-orange-500 focus:ring-orange-500">
+                                    <span class="text-sm font-medium text-slate-700">${opt.text}</span>
+                                </label>
+                            `).join("")}
+                        </div>
+                    </div>
+                    <div id="msg-${q.id}" class="mt-3 text-xs font-semibold hidden"></div>
+                </div>
+            `).join("");
+        }
+
+        // --- Render Δραστηριότητας 5 ---
+        function renderAct5() {
+            const container = document.getElementById("act5-items");
+            container.innerHTML = act5Data.map(item => `
+                <div id="row-${item.id}" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50/60 transition-colors">
+                    <div class="flex-1">
+                        <div class="flex items-start gap-2">
+                            <span class="font-bold text-purple-700 text-sm">${item.num}</span>
+                            <span class="font-medium text-slate-800 text-sm sm:text-base">${item.statement}</span>
+                        </div>
+                        <div id="msg-${item.id}" class="text-xs font-semibold mt-1.5 pl-5 hidden"></div>
+                    </div>
+                    <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+                        <label id="lbl-${item.id}-S" class="cursor-pointer select-none">
+                            <input type="radio" name="${item.id}" value="Σ" class="peer sr-only" onchange="clearRowFeedback('row-${item.id}', 'msg-${item.id}')">
+                            <span class="inline-flex items-center justify-center w-12 h-10 rounded-xl border-2 border-slate-200 bg-white font-display font-bold text-slate-700 peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600 transition shadow-sm">
+                                Σ
+                            </span>
+                        </label>
+                        <label id="lbl-${item.id}-L" class="cursor-pointer select-none">
+                            <input type="radio" name="${item.id}" value="Λ" class="peer sr-only" onchange="clearRowFeedback('row-${item.id}', 'msg-${item.id}')">
+                            <span class="inline-flex items-center justify-center w-12 h-10 rounded-xl border-2 border-slate-200 bg-white font-display font-bold text-slate-700 peer-checked:bg-rose-600 peer-checked:text-white peer-checked:border-rose-600 transition shadow-sm">
+                                Λ
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // --- Render Δραστηριότητας 6 (Σενάρια) ---
+        function renderAct6() {
+            const container = document.getElementById("act6-items");
+            container.innerHTML = act6Data.map(sc => `
+                <div id="box-${sc.id}" class="p-5 rounded-2xl border-2 border-slate-100 bg-slate-50/70 transition-colors">
+                    <div class="flex items-start gap-3 mb-3.5">
+                        <span class="text-2xl bg-white w-11 h-11 rounded-2xl flex items-center justify-center shadow-sm border border-rose-100 shrink-0">${sc.icon}</span>
+                        <div>
+                            <span class="inline-block px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-xs font-bold mb-1">${sc.num}</span>
+                            <h3 class="font-bold text-slate-900 text-sm sm:text-base leading-snug">${sc.story}</h3>
+                        </div>
+                    </div>
+                    <div class="space-y-2 sm:pl-14">
+                        ${sc.options.map(opt => `
+                            <label id="lbl-${sc.id}-${opt.key}" class="option-label flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200 cursor-pointer">
+                                <input type="radio" name="${sc.id}" value="${opt.key}" onchange="clearBoxFeedback('box-${sc.id}', 'msg-${sc.id}')"
+                                    class="w-4 h-4 mt-0.5 text-rose-600 focus:ring-rose-500 shrink-0">
+                                <span class="text-xs sm:text-sm font-medium text-slate-700 leading-relaxed">
+                                    <strong class="text-slate-900">${opt.key}.</strong> ${opt.text}
+                                </span>
+                            </label>
+                        `).join("")}
+                    </div>
+                    <div id="msg-${sc.id}" class="mt-3 sm:pl-14 text-xs sm:text-sm font-medium hidden"></div>
+                </div>
+            `).join("");
+        }
+
+        // ==========================================
+        // ΒΟΗΘΗΤΙΚΕΣ ΣΥΝΑΡΤΗΣΕΙΣ ΟΠΤΙΚΗΣ ΑΝΑΤΡΟΦΟΔΟΤΗΣΗΣ
+        // ==========================================
+        function clearRowFeedback(rowId, msgId) {
+            const row = document.getElementById(rowId);
+            const msg = document.getElementById(msgId);
+            if (row) {
+                row.classList.remove("border-emerald-400", "bg-emerald-50/70", "border-rose-400", "bg-rose-50/70");
+                row.classList.add("border-slate-100", "bg-slate-50/60");
+            }
+            if (msg) {
+                msg.classList.add("hidden");
+                msg.textContent = "";
+            }
+        }
+
+        function clearBoxFeedback(boxId, msgId) {
+            const box = document.getElementById(boxId);
+            const msg = document.getElementById(msgId);
+            if (box) {
+                box.classList.remove("border-emerald-400", "bg-emerald-50/60", "border-rose-400", "bg-rose-50/60");
+                box.classList.add("border-slate-100", "bg-slate-50/60");
+            }
+            if (msg) {
+                msg.classList.add("hidden");
+                msg.textContent = "";
+            }
+        }
+
+        function setRowStatus(rowId, msgId, isCorrect, message) {
+            const row = document.getElementById(rowId);
+            const msg = document.getElementById(msgId);
+            row.classList.remove("border-slate-100", "bg-slate-50/60", "border-emerald-400", "bg-emerald-50/70", "border-rose-400", "bg-rose-50/70");
+            msg.classList.remove("hidden", "text-emerald-700", "text-rose-700");
+
+            if (isCorrect) {
+                row.classList.add("border-emerald-400", "bg-emerald-50/70");
+                msg.classList.add("text-emerald-700");
+                msg.innerHTML = `✅ ${message}`;
+            } else {
+                row.classList.add("border-rose-400", "bg-rose-50/70");
+                msg.classList.add("text-rose-700");
+                msg.innerHTML = `❌ ${message}`;
+            }
+        }
+
+        function updateBadge(badgeId, score, total) {
+            const badge = document.getElementById(badgeId);
+            badge.classList.remove("hidden", "bg-emerald-100", "text-emerald-800", "bg-amber-100", "text-amber-800", "bg-rose-100", "text-rose-800");
+            if (score === total) {
+                badge.classList.add("bg-emerald-100", "text-emerald-800");
+                badge.textContent = `🌟 Άριστα! ${score}/${total}`;
+            } else if (score >= total / 2) {
+                badge.classList.add("bg-amber-100", "text-amber-800");
+                badge.textContent = `👍 Σκορ: ${score}/${total}`;
+            } else {
+                badge.classList.add("bg-rose-100", "text-rose-800");
+                badge.textContent = `💪 Σκορ: ${score}/${total}`;
+            }
+        }
+
+        // ==========================================
+        // ΕΛΕΓΧΟΣ & ΕΠΑΝΑΦΟΡΑ ΑΝΑ ΔΡΑΣΤΗΡΙΟΤΗΤΑ
+        // ==========================================
+
+        // --- Έλεγχος Δραστηριότητας 1 ---
+        function checkAct1() {
+            let score = 0;
+            act1Data.forEach(item => {
+                const val = document.getElementById(`sel-${item.id}`).value;
+                if (val === item.answer) {
+                    score++;
+                    setRowStatus(`row-${item.id}`, `msg-${item.id}`, true, "Σωστό!");
+                } else {
+                    setRowStatus(`row-${item.id}`, `msg-${item.id}`, false, `Σωστή απάντηση: ${item.answer}`);
+                }
+            });
+            scores.act1 = score;
+            updateBadge("act1-badge", score, maxScores.act1);
+            document.getElementById("act1-feedback").innerHTML = score === maxScores.act1
+                ? `<span class="text-emerald-700">🎉 Μπράβο! Βρήκες όλες τις ρυθμίσεις σωστά (${score}/${maxScores.act1})!</span>`
+                : `<span class="text-slate-700">Πέτυχες <strong class="text-indigo-700">${score} στα ${maxScores.act1}</strong>. Δες τις διορθώσεις παραπάνω.</span>`;
+            updateTotalSummary();
+        }
+
+        function resetAct1() {
+            act1Data.forEach(item => {
+                document.getElementById(`sel-${item.id}`).value = "";
+                clearRowFeedback(`row-${item.id}`, `msg-${item.id}`);
+            });
+            document.getElementById("act1-badge").classList.add("hidden");
+            document.getElementById("act1-feedback").textContent = "";
+            scores.act1 = null;
+            updateTotalSummary();
+        }
+
+        // --- Έλεγχος Δραστηριότητας 2 ---
+        function checkAct2() {
+            let score = 0;
+            act2Data.forEach(item => {
+                const val = parseInt(document.getElementById(`sel-${item.id}`).value, 10);
+                if (val === item.correctOrder) {
+                    score++;
+                    setRowStatus(`row-${item.id}`, `msg-${item.id}`, true, `Σωστή θέση (${item.correctOrder}ο βήμα)`);
+                } else {
+                    setRowStatus(`row-${item.id}`, `msg-${item.id}`, false, `Σωστή σειρά: ${item.correctOrder}ο βήμα`);
+                }
+            });
+
+            // Έλεγχος ερώτησης αστεριού
+            const bonusSelected = document.querySelector('input[name="act2_bonus"]:checked');
+            const bonusBox = document.getElementById("act2-bonus-box");
+            const bonusMsg = document.getElementById("act2-bonus-msg");
+            bonusBox.classList.remove("border-amber-300", "bg-amber-50/80", "border-emerald-400", "bg-emerald-50/70", "border-rose-400", "bg-rose-50/70");
+
+            if (bonusSelected && bonusSelected.value === "space") {
+                score++;
+                bonusBox.classList.add("border-emerald-400", "bg-emerald-50/70");
+                bonusMsg.className = "mt-2 pl-2 sm:pl-9 text-xs sm:text-sm font-semibold text-emerald-700";
+                bonusMsg.textContent = "✅ Σωστά! Με την απεγκατάσταση ελευθερώνουμε χώρο στον δίσκο.";
+            } else {
+                bonusBox.classList.add("border-rose-400", "bg-rose-50/70");
+                bonusMsg.className = "mt-2 pl-2 sm:pl-9 text-xs sm:text-sm font-semibold text-rose-700";
+                bonusMsg.textContent = "❌ Σωστή απάντηση: α) Ελευθερώνουμε αποθηκευτικό χώρο στον δίσκο.";
+            }
+
+            scores.act2 = score;
+            updateBadge("act2-badge", score, maxScores.act2);
+            document.getElementById("act2-feedback").innerHTML = score === maxScores.act2
+                ? `<span class="text-emerald-700">🎉 Εξαιρετικά! Έβαλες όλα τα βήματα στη σωστή σειρά (${score}/${maxScores.act2})!</span>`
+                : `<span class="text-slate-700">Πέτυχες <strong class="text-sky-700">${score} στα ${maxScores.act2}</strong>. Έλεγξε τη σωστή σειρά!</span>`;
+            updateTotalSummary();
+        }
+
+        function resetAct2() {
+            act2Data.forEach(item => {
+                document.getElementById(`sel-${item.id}`).value = "";
+                clearRowFeedback(`row-${item.id}`, `msg-${item.id}`);
+            });
+            document.querySelectorAll('input[name="act2_bonus"]').forEach(r => r.checked = false);
+            const bonusBox = document.getElementById("act2-bonus-box");
+            bonusBox.classList.remove("border-emerald-400", "bg-emerald-50/70", "border-rose-400", "bg-rose-50/70");
+            bonusBox.classList.add("border-amber-300", "bg-amber-50/80");
+            document.getElementById("act2-bonus-msg").textContent = "";
+
+            document.getElementById("act2-badge").classList.add("hidden");
+            document.getElementById("act2-feedback").textContent = "";
+            scores.act2 = null;
+            updateTotalSummary();
+        }
+
+        // --- Έλεγχος Δραστηριότητας 3 ---
+        function checkAct3() {
+            let score = 0;
+            act3Data.forEach(item => {
+                const val = document.getElementById(`sel-${item.id}`).value;
+                const correctObj = act3Actions.find(a => a.code === item.correct);
+                if (val === item.correct) {
+                    score++;
+                    setRowStatus(`row-${item.id}`, `msg-${item.id}`, true, "Σωστή αντιστοίχιση!");
+                } else {
+                    setRowStatus(`row-${item.id}`, `msg-${item.id}`, false, `Σωστό: ${correctObj.text}`);
+                }
+            });
+            scores.act3 = score;
+            updateBadge("act3-badge", score, maxScores.act3);
+            document.getElementById("act3-feedback").innerHTML = score === maxScores.act3
+                ? `<span class="text-emerald-700">🎉 Τέλεια! Έλυσες σωστά όλα τα προβλήματα (${score}/${maxScores.act3})!</span>`
+                : `<span class="text-slate-700">Πέτυχες <strong class="text-emerald-700">${score} στα ${maxScores.act3}</strong>. Δες τις σωστές ενέργειες!</span>`;
+            updateTotalSummary();
+        }
+
+        function resetAct3() {
+            act3Data.forEach(item => {
+                document.getElementById(`sel-${item.id}`).value = "";
+                clearRowFeedback(`row-${item.id}`, `msg-${item.id}`);
+            });
+            document.getElementById("act3-badge").classList.add("hidden");
+            document.getElementById("act3-feedback").textContent = "";
+            scores.act3 = null;
+            updateTotalSummary();
+        }
+
+        // --- Έλεγχος Δραστηριότητας 4 ---
+        function checkAct4() {
+            let score = 0;
+            act4Data.forEach(q => {
+                const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+                const correctOpt = q.options.find(o => o.key === q.correct);
+                const isCorrect = selected && selected.value === q.correct;
+                if (isCorrect) score++;
+
+                setRowStatus(
+                    `box-${q.id}`,
+                    `msg-${q.id}`,
+                    isCorrect,
+                    isCorrect ? "Σωστή επιλογή!" : `Σωστή απάντηση: ${correctOpt.text}`
+                );
+            });
+            scores.act4 = score;
+            updateBadge("act4-badge", score, maxScores.act4);
+            document.getElementById("act4-feedback").innerHTML = score === maxScores.act4
+                ? `<span class="text-emerald-700">🎉 Συγχαρητήρια! Όλες οι απαντήσεις είναι σωστές (${score}/${maxScores.act4})!</span>`
+                : `<span class="text-slate-700">Πέτυχες <strong class="text-orange-600">${score} στα ${maxScores.act4}</strong>.</span>`;
+            updateTotalSummary();
+        }
+
+        function resetAct4() {
+            act4Data.forEach(q => {
+                document.querySelectorAll(`input[name="${q.id}"]`).forEach(r => r.checked = false);
+                clearBoxFeedback(`box-${q.id}`, `msg-${q.id}`);
+            });
+            document.getElementById("act4-badge").classList.add("hidden");
+            document.getElementById("act4-feedback").textContent = "";
+            scores.act4 = null;
+            updateTotalSummary();
+        }
+
+        // --- Έλεγχος Δραστηριότητας 5 ---
+        function checkAct5() {
+            let score = 0;
+            act5Data.forEach(item => {
+                const selected = document.querySelector(`input[name="${item.id}"]:checked`);
+                const isCorrect = selected && selected.value === item.correct;
+                if (isCorrect) score++;
+
+                setRowStatus(
+                    `row-${item.id}`,
+                    `msg-${item.id}`,
+                    isCorrect,
+                    isCorrect ? item.hint : `${item.hint}`
+                );
+            });
+            scores.act5 = score;
+            updateBadge("act5-badge", score, maxScores.act5);
+            document.getElementById("act5-feedback").innerHTML = score === maxScores.act5
+                ? `<span class="text-emerald-700">🎉 Φανταστικά! ${score}/${maxScores.act5} σωστά!</span>`
+                : `<span class="text-slate-700">Πέτυχες <strong class="text-purple-700">${score} στα ${maxScores.act5}</strong>.</span>`;
+            updateTotalSummary();
+        }
+
+        function resetAct5() {
+            act5Data.forEach(item => {
+                document.querySelectorAll(`input[name="${item.id}"]`).forEach(r => r.checked = false);
+                clearRowFeedback(`row-${item.id}`, `msg-${item.id}`);
+            });
+            document.getElementById("act5-badge").classList.add("hidden");
+            document.getElementById("act5-feedback").textContent = "";
+            scores.act5 = null;
+            updateTotalSummary();
+        }
+
+        // --- Έλεγχος Δραστηριότητας 6 (Σενάρια) ---
+        function checkAct6() {
+            let score = 0;
+            act6Data.forEach(sc => {
+                const selected = document.querySelector(`input[name="${sc.id}"]:checked`);
+                const isCorrect = selected && selected.value === sc.correct;
+                if (isCorrect) score++;
+
+                const correctOpt = sc.options.find(o => o.key === sc.correct);
+                const msgText = isCorrect
+                    ? `<strong>Μπράβο!</strong> ${sc.explanation}`
+                    : `<strong>Σωστή λύση (${sc.correct}):</strong> ${correctOpt.text} — <em>${sc.explanation}</em>`;
+
+                setRowStatus(`box-${sc.id}`, `msg-${sc.id}`, isCorrect, msgText);
+            });
+            scores.act6 = score;
+            updateBadge("act6-badge", score, maxScores.act6);
+            document.getElementById("act6-feedback").innerHTML = score === maxScores.act6
+                ? `<span class="text-emerald-700">🎉 Έγινες εξπέρ στην επίλυση προβλημάτων (${score}/${maxScores.act6})!</span>`
+                : `<span class="text-slate-700">Πέτυχες <strong class="text-rose-700">${score} στα ${maxScores.act6}</strong> σενάρια.</span>`;
+            updateTotalSummary();
+        }
+
+        function resetAct6() {
+            act6Data.forEach(sc => {
+                document.querySelectorAll(`input[name="${sc.id}"]`).forEach(r => r.checked = false);
+                clearBoxFeedback(`box-${sc.id}`, `msg-${sc.id}`);
+            });
+            document.getElementById("act6-badge").classList.add("hidden");
+            document.getElementById("act6-feedback").textContent = "";
+            scores.act6 = null;
+            updateTotalSummary();
+        }
+
+        // ==========================================
+        // ΣΥΝΟΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ & ΜΑΖΙΚΕΣ ΕΝΕΡΓΕΙΕΣ
+        // ==========================================
+        function updateTotalSummary() {
+            let total = 0;
+            let completedCount = 0;
+
+            Object.keys(scores).forEach(key => {
+                const sumEl = document.getElementById(`sum-${key}`);
+                if (scores[key] !== null) {
+                    total += scores[key];
+                    completedCount++;
+                    sumEl.textContent = `${scores[key]} / ${maxScores[key]}`;
+                    sumEl.className = scores[key] === maxScores[key]
+                        ? "font-bold text-sm mt-0.5 text-emerald-400"
+                        : "font-bold text-sm mt-0.5 text-amber-300";
+                } else {
+                    sumEl.textContent = `- / ${maxScores[key]}`;
+                    sumEl.className = "font-bold text-sm mt-0.5 text-slate-400";
+                }
+            });
+
+            document.getElementById("total-score").textContent = total;
+            document.getElementById("total-percent").textContent = `Ολοκληρώθηκαν: ${completedCount} / 6 δραστηριότητες`;
+
+            const msgEl = document.getElementById("total-message");
+            if (completedCount === 0) {
+                msgEl.textContent = "";
+            } else if (total === 34) {
+                msgEl.textContent = "🌟 Άριστα 10! Έλυσες σωστά όλο το φύλλο εργασίας!";
+            } else if (total >= 26) {
+                msgEl.textContent = "👏 Πολύ καλή προσπάθεια! Έχεις κατανοήσει άψογα το μάθημα!";
+            } else {
+                msgEl.textContent = "💡 Συνέχισε την εξάσκηση! Δες τις υποδείξεις σε όσα σημεία δυσκολεύτηκες.";
+            }
+        }
+
+        function checkAll() {
+            checkAct1();
+            checkAct2();
+            checkAct3();
+            checkAct4();
+            checkAct5();
+            checkAct6();
+        }
+
+        function showResetModal() {
+            const modal = document.getElementById("reset-modal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function closeResetModal() {
+            const modal = document.getElementById("reset-modal");
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+
+        function confirmResetAll() {
+            resetAct1();
+            resetAct2();
+            resetAct3();
+            resetAct4();
+            resetAct5();
+            resetAct6();
+            closeResetModal();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    </script>
+  <p>Κατερίνα Φιλιππάκη - Εκπαιδευτικός Πληροφορικής</p>
+</body>
+</html>
