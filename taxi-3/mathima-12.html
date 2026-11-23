@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#3156a5">
+<title>Η δικτύωση υπολογιστών και ψηφιακών συσκευών | Διαδραστικό φύλλο εργασίας</title>
+<style>
+:root{--blue:#3156a5;--blue2:#eaf0ff;--ink:#202944;--muted:#66718a;--green:#16834b;--red:#c23b42;--line:#d8deeb;--paper:#fff;--bg:#f3f6fc;--gold:#fff3cf}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;line-height:1.5}
+header{background:linear-gradient(135deg,#243f83,#5279ca);color:white;padding:30px 18px 26px;text-align:center}
+header .tag{display:inline-block;border:1px solid #ffffff88;border-radius:999px;padding:4px 13px;font-size:.9rem;margin-bottom:9px}
+h1{font-size:clamp(1.55rem,4vw,2.5rem);line-height:1.15;margin:5px auto 8px;max-width:850px}
+header p{margin:0;color:#e8eeff}
+main{max-width:1050px;margin:22px auto;padding:0 14px 50px}
+.panel,.activity{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:20px;margin:16px 0;box-shadow:0 4px 16px #263b6810}
+.student-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+label{font-weight:650;display:block;margin-bottom:5px}
+input[type=text],textarea,select{font:inherit;color:var(--ink);border:1.5px solid #c9d2e3;border-radius:10px;padding:10px 12px;background:#fff;width:100%}
+input:focus,textarea:focus,select:focus,button:focus-visible{outline:3px solid #9cb6ff;outline-offset:2px}
+h2{font-size:1.25rem;margin:0 0 5px;display:flex;align-items:center;gap:10px}
+.num{background:var(--blue);color:white;border-radius:50%;width:36px;height:36px;display:inline-grid;place-items:center;flex:none}
+.instruction{color:var(--muted);margin:4px 0 15px}
+.question{padding:12px 0;border-top:1px dashed var(--line)}
+.question:first-of-type{border-top:0}
+.qline{display:flex;gap:9px;align-items:flex-start}
+.qnum{font-weight:800;color:var(--blue);min-width:23px}
+.inline-select{display:inline-block;width:auto;min-width:145px;max-width:100%;padding:5px 8px;margin:2px}
+.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:9px 15px;font-weight:700}
+.check{background:var(--blue);color:white}.secondary{background:#edf1f8;color:#34415e}.check:hover{background:#233f86}
+.feedback{font-weight:650;min-height:1.5em;margin:9px 0 0}.good{color:var(--green)}.bad{color:var(--red)}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.device-card{border:1px solid var(--line);border-radius:13px;padding:14px;text-align:center;background:#fcfdff}
+.device-icon{font-size:3rem;line-height:1.25;min-height:70px;display:grid;place-items:center}
+.device-card select{max-width:260px;margin-top:8px}
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 18px}
+.match-row{display:grid;grid-template-columns:1fr minmax(150px,.85fr);align-items:center;gap:10px;border:1px solid var(--line);border-radius:11px;padding:9px 12px}
+.device-name{font-weight:600}.device-name span{font-size:1.35rem;margin-right:7px}
+.options{display:grid;gap:7px;margin:7px 0 0 31px}
+.option{display:flex;gap:9px;align-items:flex-start}
+.option input{margin-top:5px;accent-color:var(--blue);transform:scale(1.15)}
+.map-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.map-branch{border:1px solid var(--line);border-radius:13px;padding:13px;background:#fbfcff}
+.map-branch h3{margin:0 0 10px;color:var(--blue);font-size:1.05rem}
+.drop-slots{display:grid;gap:8px}
+.drop-slot{min-height:48px;border:2px dashed #9ba9c4;border-radius:10px;padding:8px 10px;background:white;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.drop-slot .hint{color:#7b8599;font-size:.9rem}
+.drop-slot.filled{border-style:solid;border-color:#8ba3d8;background:#f5f8ff}
+.word-bank{grid-column:1/-1;background:#f4f6fb;border:1px solid var(--line);border-radius:13px;padding:13px}
+.word-bank h3{margin:0 0 9px;font-size:1rem}
+.words{display:flex;gap:8px;flex-wrap:wrap}
+.word{background:#fff;border:1.5px solid #9eadd0;color:#2b447d;padding:8px 12px;border-radius:999px;touch-action:manipulation}
+.word[disabled]{opacity:.35;cursor:not-allowed}
+.word.dragging{opacity:.45}
+.drop-slot.over{background:#e9efff;border-color:var(--blue)}
+.slot-remove{background:#e2e9f8;color:#344c83;padding:2px 8px;border-radius:50%;margin-left:auto}
+.writing{margin:8px 0 16px}.writing textarea{min-height:90px;resize:vertical}
+.scorebar{position:sticky;bottom:10px;background:#243f83;color:white;border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 6px 24px #172b5a35;z-index:5}
+.scorebar strong{font-size:1.1rem}.scorebar small{color:#dce5ff}
+footer{text-align:center;color:var(--muted);padding:18px}
+@media(max-width:680px){.student-grid,.cards,.match-grid,.map-layout{grid-template-columns:1fr}.word-bank{grid-column:auto}.match-row{grid-template-columns:1fr 1fr}.panel,.activity{padding:15px}.scorebar{align-items:flex-start;flex-direction:column}}
+@media print{body{background:white}.scorebar,.actions button{display:none}.panel,.activity{box-shadow:none;break-inside:avoid}header{background:white;color:#17254a;border-bottom:2px solid #17254a}header p{color:#333}}
+</style>
+</head>
+<body>
+<header>
+  <div class="tag">Πληροφορική • Γ΄ Δημοτικού</div>
+  <h1>Η δικτύωση υπολογιστών<br>και ψηφιακών συσκευών</h1>
+  <p>Διαδραστικό φύλλο εργασίας • Μαθαίνω – Συνδέομαι – Συνεργάζομαι!</p>
+</header>
+<main>
+<section class="panel" aria-labelledby="student-title">
+  <h2 id="student-title">✏️ Τα στοιχεία μου</h2>
+  <p class="instruction">Συμπλήρωσε τα στοιχεία σου πριν ξεκινήσεις.</p>
+  <div class="student-grid">
+    <div><label for="firstName">Όνομα</label><input id="firstName" type="text" autocomplete="given-name" placeholder="Το όνομά σου"></div>
+    <div><label for="lastName">Επώνυμο</label><input id="lastName" type="text" autocomplete="family-name" placeholder="Το επώνυμό σου"></div>
+    <div><label for="className">Τάξη</label><input id="className" type="text" value="Γ΄ Δημοτικού" placeholder="π.χ. Γ1"></div>
+  </div>
+</section>
+
+<section class="activity" id="a1">
+<h2><span class="num">1</span> Συμπλήρωσε τα κενά.</h2>
+<p class="instruction">Χρησιμοποίησε τις λέξεις από το πλαίσιο. Κάθε λέξη μπορεί να χρησιμοποιηθεί μία φορά.</p>
+<div class="words" style="margin-bottom:12px">
+  <span class="word" aria-hidden="true">δίκτυο</span><span class="word" aria-hidden="true">καλώδιο</span><span class="word" aria-hidden="true">ασύρματα</span><span class="word" aria-hidden="true">διαδίκτυο</span><span class="word" aria-hidden="true">ενσύρματα</span><span class="word" aria-hidden="true">συσκευές</span>
+</div>
+<div class="question"><div class="qline"><span class="qnum">1.</span><span>Όταν οι υπολογιστές συνδέονται μεταξύ τους, δημιουργείται ένα
+<select class="inline-select" data-answer="δίκτυο" aria-label="Κενό 1"><option value="">— επίλεξε —</option><option>δίκτυο</option><option>καλώδιο</option><option>ασύρματα</option><option>διαδίκτυο</option><option>ενσύρματα</option><option>συσκευές</option></select>.</span></div></div>
+<div class="question"><div class="qline"><span class="qnum">2.</span><span>Η σύνδεση με <select class="inline-select" data-answer="καλώδιο" aria-label="Κενό 2"><option value="">— επίλεξε —</option><option>δίκτυο</option><option>καλώδιο</option><option>ασύρματα</option><option>διαδίκτυο</option><option>ενσύρματα</option><option>συσκευές</option></select> χρησιμοποιεί καλώδια, ενώ η σύνδεση <select class="inline-select" data-answer="ασύρματα" aria-label="Κενό 3"><option value="">— επίλεξε —</option><option>δίκτυο</option><option>καλώδιο</option><option>ασύρματα</option><option>διαδίκτυο</option><option>ενσύρματα</option><option>συσκευές</option></select> δεν χρησιμοποιεί καλώδια.</span></div></div>
+<div class="question"><div class="qline"><span class="qnum">3.</span><span>Το <select class="inline-select" data-answer="διαδίκτυο" aria-label="Κενό 4"><option value="">— επίλεξε —</option><option>δίκτυο</option><option>καλώδιο</option><option>ασύρματα</option><option>διαδίκτυο</option><option>ενσύρματα</option><option>συσκευές</option></select> είναι ένα παγκόσμιο δίκτυο με συνδεδεμένους υπολογιστές.</span></div></div>
+<div class="question"><div class="qline"><span class="qnum">4.</span><span>Σε ένα δίκτυο μπορούμε να συνδέσουμε και άλλες ψηφιακές <select class="inline-select" data-answer="συσκευές" aria-label="Κενό 5"><option value="">— επίλεξε —</option><option>δίκτυο</option><option>καλώδιο</option><option>ασύρματα</option><option>διαδίκτυο</option><option>ενσύρματα</option><option>συσκευές</option></select> (π.χ. εκτυπωτές, κινητά, τάμπλετ).</span></div></div>
+<div class="question"><div class="qline"><span class="qnum">5.</span><span>Τα <select class="inline-select" data-answer="ενσύρματα" aria-label="Κενό 6"><option value="">— επίλεξε —</option><option>δίκτυο</option><option>καλώδιο</option><option>ασύρματα</option><option>διαδίκτυο</option><option>ενσύρματα</option><option>συσκευές</option></select> (π.χ. Ethernet) είναι ένας τρόπος ενσύρματης σύνδεσης.</span></div></div>
+<div class="actions"><button class="check" onclick="checkSelects('a1')">Έλεγχος δραστηριότητας 1</button><button class="secondary" onclick="resetActivity('a1')">Καθαρισμός</button></div><p class="feedback" id="f-a1" aria-live="polite"></p>
+</section>
+
+<section class="activity" id="a2">
+<h2><span class="num">2</span> Αναγνώρισε τον τρόπο σύνδεσης.</h2>
+<p class="instruction">Γράψε κάτω από κάθε εικόνα αν είναι ενσύρματη ή ασύρματη σύνδεση.</p>
+<div class="cards">
+ <div class="device-card"><div class="device-icon" aria-hidden="true">🖥️ ─ 🗄️</div><strong>Υπολογιστής με καλώδιο</strong><select data-answer="Ενσύρματη" aria-label="Τρόπος σύνδεσης υπολογιστή"><option value="">— επίλεξε —</option><option>Ενσύρματη</option><option>Ασύρματη</option></select></div>
+ <div class="device-card"><div class="device-icon" aria-hidden="true">📱 )))</div><strong>Κινητό με Wi-Fi</strong><select data-answer="Ασύρματη" aria-label="Τρόπος σύνδεσης κινητού"><option value="">— επίλεξε —</option><option>Ενσύρματη</option><option>Ασύρματη</option></select></div>
+ <div class="device-card"><div class="device-icon" aria-hidden="true">🖨️ ─ 🔌</div><strong>Εκτυπωτής με καλώδιο</strong><select data-answer="Ενσύρματη" aria-label="Τρόπος σύνδεσης εκτυπωτή"><option value="">— επίλεξε —</option><option>Ενσύρματη</option><option>Ασύρματη</option></select></div>
+ <div class="device-card"><div class="device-icon" aria-hidden="true">💻 ᛒ</div><strong>Φορητός υπολογιστής με Bluetooth</strong><select data-answer="Ασύρματη" aria-label="Τρόπος σύνδεσης φορητού"><option value="">— επίλεξε —</option><option>Ενσύρματη</option><option>Ασύρματη</option></select></div>
+</div>
+<div class="actions"><button class="check" onclick="checkSelects('a2')">Έλεγχος δραστηριότητας 2</button><button class="secondary" onclick="resetActivity('a2')">Καθαρισμός</button></div><p class="feedback" id="f-a2" aria-live="polite"></p>
+</section>
+
+<section class="activity" id="a3">
+<h2><span class="num">3</span> Σύνδεσε κάθε συσκευή με την κατάλληλη τεχνολογία.</h2>
+<p class="instruction">Επίλεξε την τεχνολογία που ταιριάζει σε κάθε συσκευή.</p>
+<div class="match-grid">
+ <div class="match-row"><div class="device-name"><span>💻</span>Φορητός υπολογιστής</div><select data-answer="Wi-Fi" aria-label="Τεχνολογία φορητού υπολογιστή"><option value="">— επίλεξε —</option><option>Wi-Fi</option><option>Bluetooth</option><option>Καλώδιο δικτύου (Ethernet)</option><option>5G</option></select></div>
+ <div class="match-row"><div class="device-name"><span>📱</span>Έξυπνο κινητό τηλέφωνο</div><select data-answer="5G" aria-label="Τεχνολογία κινητού"><option value="">— επίλεξε —</option><option>Wi-Fi</option><option>Bluetooth</option><option>Καλώδιο δικτύου (Ethernet)</option><option>5G</option></select></div>
+ <div class="match-row"><div class="device-name"><span>🖨️</span>Εκτυπωτής</div><select data-answer="Καλώδιο δικτύου (Ethernet)" aria-label="Τεχνολογία εκτυπωτή"><option value="">— επίλεξε —</option><option>Wi-Fi</option><option>Bluetooth</option><option>Καλώδιο δικτύου (Ethernet)</option><option>5G</option></select></div>
+ <div class="match-row"><div class="device-name"><span>🖥️</span>Υπολογιστής στο εργαστήριο</div><select data-answer="Καλώδιο δικτύου (Ethernet)" aria-label="Τεχνολογία υπολογιστή εργαστηρίου"><option value="">— επίλεξε —</option><option>Wi-Fi</option><option>Bluetooth</option><option>Καλώδιο δικτύου (Ethernet)</option><option>5G</option></select></div>
+ <div class="match-row"><div class="device-name"><span>🎧</span>Ασύρματα ακουστικά</div><select data-answer="Bluetooth" aria-label="Τεχνολογία ακουστικών"><option value="">— επίλεξε —</option><option>Wi-Fi</option><option>Bluetooth</option><option>Καλώδιο δικτύου (Ethernet)</option><option>5G</option></select></div>
+ <div class="match-row"><div class="device-name"><span>📲</span>Τάμπλετ</div><select data-answer="Wi-Fi" aria-label="Τεχνολογία τάμπλετ"><option value="">— επίλεξε —</option><option>Wi-Fi</option><option>Bluetooth</option><option>Καλώδιο δικτύου (Ethernet)</option><option>5G</option></select></div>
+</div>
+<div class="actions"><button class="check" onclick="checkSelects('a3')">Έλεγχος δραστηριότητας 3</button><button class="secondary" onclick="resetActivity('a3')">Καθαρισμός</button></div><p class="feedback" id="f-a3" aria-live="polite"></p>
+</section>
+
+<section class="activity" id="a4">
+<h2><span class="num">4</span> Βάλε Σωστό (Σ) ή Λάθος (Λ).</h2>
+<p class="instruction">Διάβασε προσεκτικά κάθε πρόταση και επίλεξε Σ ή Λ.</p>
+<div id="tf-questions">
+ <div class="question"><div class="qline"><span class="qnum">1.</span><span>Τα δίκτυα υπολογιστών επιτρέπουν στις συσκευές να επικοινωνούν μεταξύ τους.</span></div><div class="options"><label class="option"><input type="radio" name="tf1" value="Σ"> Σωστό (Σ)</label><label class="option"><input type="radio" name="tf1" value="Λ"> Λάθος (Λ)</label></div></div>
+ <div class="question"><div class="qline"><span class="qnum">2.</span><span>Μπορούμε να στείλουμε αρχεία από έναν υπολογιστή σε άλλον μέσω δικτύου.</span></div><div class="options"><label class="option"><input type="radio" name="tf2" value="Σ"> Σωστό (Σ)</label><label class="option"><input type="radio" name="tf2" value="Λ"> Λάθος (Λ)</label></div></div>
+ <div class="question"><div class="qline"><span class="qnum">3.</span><span>Ο εκτυπωτής δεν μπορεί να συνδεθεί σε δίκτυο.</span></div><div class="options"><label class="option"><input type="radio" name="tf3" value="Σ"> Σωστό (Σ)</label><label class="option"><input type="radio" name="tf3" value="Λ"> Λάθος (Λ)</label></div></div>
+ <div class="question"><div class="qline"><span class="qnum">4.</span><span>Το Wi-Fi είναι μια ασύρματη τεχνολογία σύνδεσης.</span></div><div class="options"><label class="option"><input type="radio" name="tf4" value="Σ"> Σωστό (Σ)</label><label class="option"><input type="radio" name="tf4" value="Λ"> Λάθος (Λ)</label></div></div>
+ <div class="question"><div class="qline"><span class="qnum">5.</span><span>Το διαδίκτυο είναι ένα τοπικό δίκτυο του σχολείου μας.</span></div><div class="options"><label class="option"><input type="radio" name="tf5" value="Σ"> Σωστό (Σ)</label><label class="option"><input type="radio" name="tf5" value="Λ"> Λάθος (Λ)</label></div></div>
+ <div class="question"><div class="qline"><span class="qnum">6.</span><span>Με το Bluetooth μπορούμε να στείλουμε φωτογραφίες από το κινητό στον υπολογιστή.</span></div><div class="options"><label class="option"><input type="radio" name="tf6" value="Σ"> Σωστό (Σ)</label><label class="option"><input type="radio" name="tf6" value="Λ"> Λάθος (Λ)</label></div></div>
+</div>
+<div class="actions"><button class="check" onclick="checkTF()">Έλεγχος δραστηριότητας 4</button><button class="secondary" onclick="resetActivity('a4')">Καθαρισμός</button></div><p class="feedback" id="f-a4" aria-live="polite"></p>
+</section>
+
+<section class="activity" id="a5">
+<h2><span class="num">5</span> Συμπλήρωσε τον χάρτη.</h2>
+<p class="instruction">Σύρε τις λέξεις στα σωστά κουτάκια. Μπορείς επίσης να πατήσεις πρώτα μια λέξη και μετά το κουτάκι της. Για να αλλάξεις απάντηση, πάτησε το ×.</p>
+<div class="map-layout">
+ <div class="map-branch"><h3>Τρόποι σύνδεσης</h3><div class="drop-slots">
+  <div class="drop-slot" data-accept="ενσύρματη σύνδεση" tabindex="0" role="button" aria-label="Θέση: με καλώδιο"><span class="hint">Με καλώδιο</span></div>
+  <div class="drop-slot" data-accept="ασύρματη σύνδεση" tabindex="0" role="button" aria-label="Θέση: χωρίς καλώδιο"><span class="hint">Χωρίς καλώδιο</span></div>
+ </div></div>
+ <div class="map-branch"><h3>Οφέλη</h3><div class="drop-slots">
+  <div class="drop-slot" data-accept="επικοινωνία από μακριά" tabindex="0" role="button" aria-label="Όφελος 1"><span class="hint">Όφελος 1</span></div>
+  <div class="drop-slot" data-accept="ανταλλαγή αρχείων" tabindex="0" role="button" aria-label="Όφελος 2"><span class="hint">Όφελος 2</span></div>
+  <div class="drop-slot" data-accept="μοιραζόμαστε συσκευές" tabindex="0" role="button" aria-label="Όφελος 3"><span class="hint">Όφελος 3</span></div>
+ </div></div>
+ <div class="map-branch"><h3>Παραδείγματα τεχνολογιών</h3><div class="drop-slots">
+  <div class="drop-slot" data-accept="Bluetooth" tabindex="0" role="button" aria-label="Τεχνολογία 1"><span class="hint">Τεχνολογία 1</span></div>
+  <div class="drop-slot" data-accept="Wi-Fi" tabindex="0" role="button" aria-label="Τεχνολογία 2"><span class="hint">Τεχνολογία 2</span></div>
+  <div class="drop-slot" data-accept="5G" tabindex="0" role="button" aria-label="Τεχνολογία 3"><span class="hint">Τεχνολογία 3</span></div>
+ </div></div>
+ <div class="word-bank"><h3>Λέξεις για τον χάρτη – διάλεξε και τοποθέτησε</h3><div class="words" id="wordBank">
+  <button class="word" draggable="true" data-word="ενσύρματη σύνδεση">Ενσύρματη σύνδεση</button>
+  <button class="word" draggable="true" data-word="ασύρματη σύνδεση">Ασύρματη σύνδεση</button>
+  <button class="word" draggable="true" data-word="επικοινωνία από μακριά">Επικοινωνία από μακριά</button>
+  <button class="word" draggable="true" data-word="ανταλλαγή αρχείων">Ανταλλαγή αρχείων</button>
+  <button class="word" draggable="true" data-word="μοιραζόμαστε συσκευές">Μοιραζόμαστε συσκευές</button>
+  <button class="word" draggable="true" data-word="Bluetooth">Bluetooth</button>
+  <button class="word" draggable="true" data-word="Wi-Fi">Wi-Fi</button>
+  <button class="word" draggable="true" data-word="5G">5G</button>
+ </div></div>
+</div>
+<div class="actions"><button class="check" onclick="checkMap()">Έλεγχος δραστηριότητας 5</button><button class="secondary" onclick="resetMap()">Καθαρισμός χάρτη</button></div><p class="feedback" id="f-a5" aria-live="polite"></p>
+</section>
+
+<section class="activity" id="a6">
+<h2><span class="num">6</span> Σκέψου και απάντησε.</h2>
+<p class="instruction">Γράψε τις δικές σου απαντήσεις.</p>
+<div class="writing"><div class="qline"><span class="qnum">1.</span><span>Ποιο είναι, κατά τη γνώμη σου, το πιο σημαντικό όφελος από τη σύνδεση των συσκευών σε ένα δίκτυο; Γιατί;</span></div><textarea id="open1" aria-label="Απάντηση στην ερώτηση 1" placeholder="Γράψε την απάντησή σου εδώ..."></textarea></div>
+<div class="writing"><div class="qline"><span class="qnum">2.</span><span>Γράψε ένα παράδειγμα από την καθημερινή σου ζωή όπου χρησιμοποιείς ασύρματη σύνδεση.</span></div><textarea id="open2" aria-label="Απάντηση στην ερώτηση 2" placeholder="Γράψε την απάντησή σου εδώ..."></textarea></div>
+<div class="actions"><button class="check" onclick="checkOpen()">Έλεγχος δραστηριότητας 6</button><button class="secondary" onclick="resetActivity('a6')">Καθαρισμός</button></div><p class="feedback" id="f-a6" aria-live="polite"></p>
+</section>
+
+<div class="scorebar"><div><strong id="scoreText">Βαθμολογία: 0 / 32</strong><br><small id="studentSummary">Καλή επιτυχία!</small></div><button class="secondary" onclick="window.print()">Εκτύπωση</button></div>
+</main>
+<footer>Μαθαίνω – Συνδέομαι – Συνεργάζομαι! 🌍</footer>
+<script>
+const completed = new Set();
+const scores = {};
+function feedback(id, message, ok){const el=document.getElementById('f-'+id);el.textContent=message;el.className='feedback '+(ok?'good':'bad');}
+function mark(id, score, total){completed.add(id);scores[id]=score;updateScore();}
+function updateScore(){
+ const n=completed.size;const points=Object.values(scores).reduce((sum,v)=>sum+v,0);document.getElementById('scoreText').textContent=`Βαθμολογία: ${points} / 32 • Έλεγχοι: ${n} / 6`;
+ const first=document.getElementById('firstName').value.trim();
+ const last=document.getElementById('lastName').value.trim();
+ document.getElementById('studentSummary').textContent=(first||last)?`Μπράβο, ${[first,last].filter(Boolean).join(' ')}! Συνέχισε την προσπάθεια!`:'Καλή επιτυχία!';
+}
+['firstName','lastName'].forEach(id=>document.getElementById(id).addEventListener('input',updateScore));
+function checkSelects(id){
+ const fields=[...document.querySelectorAll(`#${id} select[data-answer]`)];
+ let correct=0,empty=0;fields.forEach(s=>{if(!s.value)empty++;if(s.value===s.dataset.answer){correct++;s.style.borderColor='#16834b'}else{s.style.borderColor=s.value?'#c23b42':'#c9d2e3'}});
+ const total=fields.length;feedback(id,`${correct}/${total} σωστές απαντήσεις.${empty?' Συμπλήρωσε και τα κενά που έμειναν.':correct===total?' Μπράβο, όλα σωστά!':' Δοκίμασε ξανά όπου χρειάζεται.'}`,correct===total);
+ mark(id,correct,total);
+}
+function checkTF(){
+ const answers=['Σ','Σ','Λ','Σ','Λ','Σ'];let correct=0,empty=0;
+ answers.forEach((a,i)=>{const v=document.querySelector(`input[name="tf${i+1}"]:checked`);if(!v)empty++;else if(v.value===a)correct++;});
+ feedback('a4',`${correct}/6 σωστές απαντήσεις.${empty?' Απάντησε και στις προτάσεις που έμειναν κενές.':correct===6?' Μπράβο, όλα σωστά!':' Έλεγξε ξανά τις προτάσεις.'}`,correct===6);
+ mark('a4',correct,6);
+}
+let selectedWord=null;
+function refreshBank(){
+ document.querySelectorAll('#wordBank .word').forEach(btn=>{
+  const used=[...document.querySelectorAll('.drop-slot')].some(s=>s.dataset.value===btn.dataset.word);
+  btn.disabled=used;btn.classList.toggle('dragging',selectedWord===btn.dataset.word);
+ });
+}
+function placeWord(slot,word){
+ if(!slot||!word)return;
+ const previous=[...document.querySelectorAll('.drop-slot')].find(s=>s.dataset.value===word);
+ if(previous&&previous!==slot){previous.dataset.value='';previous.innerHTML=`<span class="hint">${previous.dataset.label||'Τοποθέτησε εδώ'}</span>`;previous.classList.remove('filled');}
+ slot.dataset.value=word;slot.classList.add('filled');
+ slot.innerHTML=`<strong>${word}</strong><button type="button" class="slot-remove" aria-label="Αφαίρεση λέξης">×</button>`;
+ slot.querySelector('button').addEventListener('click',e=>{e.stopPropagation();slot.dataset.value='';slot.innerHTML=`<span class="hint">${slot.dataset.label||'Τοποθέτησε εδώ'}</span>`;slot.classList.remove('filled');refreshBank();});
+ selectedWord=null;refreshBank();
+}
+document.querySelectorAll('.drop-slot').forEach((slot,i)=>{
+ slot.dataset.label=slot.querySelector('.hint').textContent;
+ slot.addEventListener('dragover',e=>{e.preventDefault();slot.classList.add('over')});
+ slot.addEventListener('dragleave',()=>slot.classList.remove('over'));
+ slot.addEventListener('drop',e=>{e.preventDefault();slot.classList.remove('over');placeWord(slot,e.dataTransfer.getData('text/plain'));});
+ slot.addEventListener('click',()=>{if(selectedWord)placeWord(slot,selectedWord);});
+ slot.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&selectedWord){e.preventDefault();placeWord(slot,selectedWord);}});
+});
+document.querySelectorAll('#wordBank .word').forEach(btn=>{
+ btn.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',btn.dataset.word);e.dataTransfer.effectAllowed='move';});
+ btn.addEventListener('click',()=>{selectedWord=selectedWord===btn.dataset.word?null:btn.dataset.word;refreshBank();});
+});
+function checkMap(){
+ const slots=[...document.querySelectorAll('.drop-slot')];let correct=0,empty=0;
+ slots.forEach(s=>{if(!s.dataset.value)empty++;if(s.dataset.value===s.dataset.accept){correct++;s.style.borderColor='#16834b'}else s.style.borderColor=s.dataset.value?'#c23b42':'#9ba9c4';});
+ feedback('a5',`${correct}/8 σωστά τοποθετημένες λέξεις.${empty?' Συμπλήρωσε όλες τις θέσεις.':correct===8?' Εξαιρετικά! Ο χάρτης συμπληρώθηκε σωστά.':' Κάποιες λέξεις χρειάζονται αλλαγή.'}`,correct===8);
+ mark('a5',correct,8);
+}
+function resetMap(){
+ document.querySelectorAll('.drop-slot').forEach(s=>{s.dataset.value='';s.innerHTML=`<span class="hint">${s.dataset.label}</span>`;s.classList.remove('filled');s.style.borderColor='';});
+ selectedWord=null;refreshBank();feedback('a5','',true);completed.delete('a5');delete scores.a5;updateScore();
+}
+function checkOpen(){
+ const a=document.getElementById('open1').value.trim(),b=document.getElementById('open2').value.trim();
+ const ok=!!a&&!!b;feedback('a6',ok?'Μπράβο! Έγραψες και τις δύο απαντήσεις. Συζήτησέ τες και με την τάξη σου.':'Χρειάζεται να γράψεις και τις δύο απαντήσεις. Δεν υπάρχει μόνο μία σωστή απάντηση!',ok);
+ mark('a6',(a?1:0)+(b?1:0),2);
+}
+function resetActivity(id){
+ const section=document.getElementById(id);
+ section.querySelectorAll('select').forEach(s=>{s.value='';s.style.borderColor=''});
+ section.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+ section.querySelectorAll('textarea').forEach(t=>t.value='');
+ const f=document.getElementById('f-'+id);f.textContent='';f.className='feedback';
+ completed.delete(id);delete scores[id];updateScore();
+}
+</script>
+</body>
+</html>
