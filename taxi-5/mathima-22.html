@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Μάθημα 22ο – Φίλτρα αναζήτησης</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f6ff;--ink:#1f2a52;--blue:#2f6fed;--purple:#5b2a9e;--green:#1f9d55;--red:#e03e3e;--orange:#f08a1c;--pink:#d63f8c;--sun:#ffc83d;--line:#cfdcf3}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Comfortaa","Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.55}
+header{background:#fff;border-bottom:4px solid var(--blue);padding:16px}
+.top{max-width:940px;margin:0 auto;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.badge{background:var(--blue);color:#fff;font-weight:700;font-size:26px;padding:8px 18px;border-radius:12px;transform:rotate(-2deg)}
+.top h1{flex:1;min-width:240px;margin:0;font-size:clamp(20px,3.4vw,30px);color:var(--purple);line-height:1.25}
+.who{display:grid;gap:6px;font-size:14px}
+.who label{display:flex;gap:6px;align-items:center}
+.who input{font:inherit;border:0;border-bottom:2px solid var(--ink);background:transparent;width:150px;padding:2px}
+.tag{max-width:940px;margin:14px auto 0;padding:10px 16px;background:#fff3cf;border-radius:12px;text-align:center}
+main{max-width:940px;margin:0 auto;padding:16px 14px 50px;display:grid;gap:22px}
+.act{background:#fff;border:3px solid var(--c);border-radius:20px;padding:18px}
+.act h2{margin:0 0 4px;font-size:21px;color:var(--c);display:flex;gap:10px;align-items:center}
+.num{background:var(--c);color:#fff;border-radius:50%;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.hint{margin:0 0 14px;color:#4b5b82;font-size:16px}
+.remember{background:#f4f8ff;border-left:6px solid var(--c);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:15px}
+.remember b{display:block;margin-bottom:4px}
+.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px;border-radius:12px;border:2px solid transparent}
+.row:nth-child(odd){background:#f6f9ff}
+.row.ok{border-color:var(--green);background:#e6f7ec}
+.row.bad{border-color:var(--red);background:#fdeaea}
+.sl{display:flex;gap:10px}
+.sl label{cursor:pointer}
+.sl input{position:absolute;opacity:0}
+.sl span{display:inline-flex;width:48px;height:44px;align-items:center;justify-content:center;border-radius:10px;font-weight:700;border:3px solid var(--line);background:#fff}
+.sl input:checked+span.t{background:var(--green);border-color:var(--green);color:#fff}
+.sl input:checked+span.f{background:var(--red);border-color:var(--red);color:#fff}
+.sl input:focus-visible+span{outline:4px solid var(--sun)}
+select{font:inherit;padding:8px;border-radius:12px;border:3px solid var(--blue);background:#fff;color:var(--ink);min-width:170px;max-width:100%}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{border:2px solid var(--line);padding:8px;text-align:center}
+td:first-child,th:first-child{text-align:left}
+td.ok{background:#e6f7ec}td.bad{background:#fdeaea}
+input[type=radio].ck{width:24px;height:24px;accent-color:var(--blue)}
+.boxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.box{border:3px solid var(--line);border-radius:16px;padding:12px}
+.box.ok{border-color:var(--green);background:#e6f7ec}.box.bad{border-color:var(--red);background:#fdeaea}
+.q{border:2px solid #9aa9c9;border-radius:30px;padding:6px 14px;margin-bottom:10px;background:#fff}
+.sg{display:block;width:100%;text-align:left;font:inherit;background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:8px;cursor:pointer;color:var(--ink)}
+.sg[aria-pressed=true]{border-color:var(--sun);box-shadow:0 0 0 4px var(--sun);font-weight:700}
+.fb{font-size:14px;margin:6px 0 0;min-height:1em}
+textarea{font:inherit;width:100%;border:2px solid var(--line);border-radius:12px;padding:8px;min-height:64px;resize:vertical;color:var(--ink)}
+label.q5{display:block;font-weight:700;margin:12px 0 4px}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.go,.re{font:inherit;font-weight:700;border:0;border-radius:30px;padding:11px 24px;cursor:pointer;font-size:17px}
+.go{background:var(--green);color:#fff}.re{background:#e8edf7;color:var(--ink)}
+.msg{font-weight:700}
+a{color:var(--blue)}
+button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible,a:focus-visible{outline:4px solid var(--sun);outline-offset:2px}
+@media print{.bar .go,.bar .re{display:none}header,.act{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="badge">ΜΑΘΗΜΑ 22ο</div>
+    <h1>Καθορισμός φίλτρων αναζήτησης – Αναγνώριση αποτελεσμάτων αναζήτησης</h1>
+    <div class="who"><label>Όνομα: <input id="nm"></label><label>Ημερομηνία: <input id="dt"></label></div>
+  </div>
+</header>
+<div class="tag" style="max-width:912px">🔍 Μαθαίνουμε να βρίσκουμε πιο ακριβώς αυτό που ψάχνουμε στο διαδίκτυο!</div>
+
+<main>
+
+<!-- 1 -->
+<section class="act" id="a1" style="--c:var(--purple)">
+  <h2><span class="num">1</span>Ασφάλεια στο διαδίκτυο – Σωστό ή Λάθος;</h2>
+  <p class="hint">Διάβασε κάθε πρόταση και διάλεξε Σ (Σωστό) ή Λ (Λάθος).</p>
+  <div class="remember"><b>🔒 Θυμήσου!</b>Προστάτευε τα προσωπικά σου στοιχεία. Μίλα μόνο με άτομα που γνωρίζεις και εμπιστεύεσαι. Σκέψου κριτικά: έλεγξε τις πληροφορίες που βρίσκεις! Ζήτησε βοήθεια από κάποιον ενήλικα, αν κάτι σε ανησυχεί.</div>
+  <div id="l1"></div>
+  <div class="bar"><button class="go">Έλεγχος</button><button class="re">Καθαρισμός</button><span class="msg" role="status"></span></div>
+</section>
+
+<!-- 2 -->
+<section class="act" id="a2" style="--c:var(--green)">
+  <h2><span class="num">2</span>Φίλτρα αναζήτησης – Τι είδος αποτελέσματος;</h2>
+  <p class="hint">Διάβασε την περιγραφή και διάλεξε ποιο φίλτρο θα χρησιμοποιήσεις.</p>
+  <div class="remember"><b>Θυμήσου τα φίλτρα!</b>🖼️ Εικόνες &nbsp; ▶️ Βίντεο &nbsp; 📰 Ειδήσεις &nbsp; 📍 Χάρτες</div>
+  <div id="l2"></div>
+  <div class="bar"><button class="go">Έλεγχος</button><button class="re">Καθαρισμός</button><span class="msg" role="status"></span></div>
+</section>
+
+<!-- 3 -->
+<section class="act" id="a3" style="--c:var(--blue)">
+  <h2><span class="num">3</span>Εφαρμόζω φίλτρα</h2>
+  <p class="hint">Φαντάσου ότι κάνεις αναζήτηση για «Έλληνες ολυμπιονίκες». Τι θα σου δώσει πιο χρήσιμες πληροφορίες για κάθε στόχο; Βάλε ✓ στο κατάλληλο φίλτρο.</p>
+  <div class="tw"><table id="t3"><thead><tr><th>Στόχος</th><th>🖼️ Εικόνες</th><th>▶️ Βίντεο</th><th>📰 Ειδήσεις</th><th>📍 Χάρτες</th></tr></thead><tbody></tbody></table></div>
+  <div class="bar"><button class="go">Έλεγχος</button><button class="re">Καθαρισμός</button><span class="msg" role="status"></span></div>
+</section>
+
+<!-- 4 -->
+<section class="act" id="a4" style="--c:var(--orange)">
+  <h2><span class="num">4</span>Προτάσεις αναζήτησης</h2>
+  <p class="hint">Διάβασε τις προτάσεις που εμφανίζει η μηχανή αναζήτησης και διάλεξε εκείνη που πιστεύεις ότι είναι πιο σχετική με την αναζήτησή σου.</p>
+  <div class="boxes" id="l4"></div>
+  <div class="bar"><button class="go">Έλεγχος</button><button class="re">Καθαρισμός</button><span class="msg" role="status"></span></div>
+</section>
+
+<!-- 5 -->
+<section class="act" id="a5" style="--c:var(--pink)">
+  <h2><span class="num">5</span>Σκέφτομαι και αξιολογώ</h2>
+  <p class="hint">Επισκέψου τον δικτυακό τόπο <a href="https://copyrightschool.gr/" target="_blank" rel="noopener">copyrightschool.gr</a> και απάντησε στις ερωτήσεις.</p>
+  <label class="q5" for="r1">Τι είδους αποτελέσματα βρήκες;</label><textarea id="r1"></textarea>
+  <label class="q5" for="r2">Τι φίλτρα χρησιμοποίησες;</label><textarea id="r2"></textarea>
+  <label class="q5" for="r3">Ποιο φίλτρο σε βοήθησε περισσότερο; Γιατί;</label><textarea id="r3"></textarea>
+  <label class="q5" for="r4">Τι έμαθες σήμερα για τις αναζητήσεις στο διαδίκτυο;</label><textarea id="r4"></textarea>
+  <div class="bar"><button class="go" id="pr">Εκτύπωση / Αποθήκευση PDF</button></div>
+  <p class="hint" style="margin-top:14px">💡 Ψάχνω έξυπνα, επιλέγω σωστά και μένω ασφαλής!</p>
+</section>
+
+</main>
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const say=(sec,ok,tot)=>{const m=$(".msg",sec);m.textContent=ok===tot?`Μπράβο! Όλα σωστά! 🎉 (${ok}/${tot})`:`Σωστά: ${ok} από ${tot}. Διόρθωσε τα κόκκινα και δοκίμασε ξανά.`;m.style.color=ok===tot?"var(--green)":"var(--red)"};
+const clear=sec=>{$(".msg",sec).textContent="";$$(".ok,.bad",sec).forEach(e=>e.classList.remove("ok","bad"))};
+const mark=(el,r)=>{el.classList.remove("ok","bad");el.classList.add(r?"ok":"bad");return r?1:0};
+
+/* ---- 1: Σωστό / Λάθος ---- */
+const S=[
+ ["Μοιράζομαι τους κωδικούς μου με τους φίλους μου.","f"],
+ ["Χρησιμοποιώ την πιστωτική κάρτα των γονιών μου χωρίς άδεια.","f"],
+ ["Ό,τι βλέπω στο διαδίκτυο είναι πάντα αλήθεια.","f"],
+ ["Δεν μιλάω με αγνώστους και δεν δίνω προσωπικά στοιχεία.","t"],
+ ["Αν δω κάτι που με ενοχλεί, το λέω σε έναν ενήλικα που εμπιστεύομαι.","t"],
+ ["Κατεβάζω αρχεία και παιχνίδια από οποιαδήποτε ιστοσελίδα.","f"]];
+S.forEach((s,i)=>{
+  const d=document.createElement("div");d.className="row";d.dataset.a=s[1];
+  d.innerHTML=`<div><b>${i+1}.</b> ${s[0]}</div><div class="sl">
+   <label><input type="radio" name="s${i}" value="t"><span class="t">Σ</span></label>
+   <label><input type="radio" name="s${i}" value="f"><span class="f">Λ</span></label></div>`;
+  $("#l1").append(d);
+});
+$("#a1 .go").onclick=()=>{let ok=0;$$("#l1 .row").forEach((r,i)=>{const v=$(`input[name=s${i}]:checked`);ok+=mark(r,v&&v.value===r.dataset.a)});say($("#a1"),ok,S.length)};
+$("#a1 .re").onclick=()=>{$$("#a1 input").forEach(i=>i.checked=false);clear($("#a1"))};
+
+/* ---- 2: φίλτρα ---- */
+const F=["Εικόνες","Βίντεο","Ειδήσεις","Χάρτες"];
+const D=[
+ ["Θέλω να δω φωτογραφίες από δελφίνια.",0],
+ ["Θέλω να παρακολουθήσω ένα ντοκιμαντέρ για τους λύκους.",1],
+ ["Θέλω να διαβάσω μια είδηση για τις πυρκαγιές στην Ελλάδα.",2],
+ ["Θέλω να δω σε ποια νησιά της Ελλάδας υπάρχουν χελώνες καρέτα-καρέτα.",3]];
+D.forEach((d,i)=>{
+  const r=document.createElement("div");r.className="row";r.dataset.a=d[1];
+  r.innerHTML=`<div><b>${i+1}.</b> ${d[0]}</div><select aria-label="Φίλτρο ${i+1}"><option value="">Διάλεξε φίλτρο…</option>${F.map((f,k)=>`<option value="${k}">${["🖼️","▶️","📰","📍"][k]} ${f}</option>`).join("")}</select>`;
+  $("#l2").append(r);
+});
+$("#a2 .go").onclick=()=>{let ok=0;$$("#l2 .row").forEach(r=>ok+=mark(r,$("select",r).value===r.dataset.a));say($("#a2"),ok,D.length)};
+$("#a2 .re").onclick=()=>{$$("#a2 select").forEach(s=>s.value="");clear($("#a2"))};
+
+/* ---- 3: πίνακας ---- */
+const G=[
+ ["Να δω φωτογραφίες από τους Έλληνες ολυμπιονίκες.",0],
+ ["Να παρακολουθήσω στιγμιότυπα από τους αγώνες τους.",1],
+ ["Να διαβάσω πρόσφατα άρθρα για τις επιτυχίες τους.",2],
+ ["Να δω σε ποια πόλη έγινε η Ολυμπιάδα του 2004.",3]];
+G.forEach((g,i)=>{
+  const tr=document.createElement("tr");tr.dataset.a=g[1];
+  tr.innerHTML=`<td><b>${i+1}.</b> ${g[0]}</td>`+F.map((f,k)=>`<td><input class="ck" type="radio" name="g${i}" value="${k}" aria-label="${f}"></td>`).join("");
+  $("#t3 tbody").append(tr);
+});
+$("#a3 .go").onclick=()=>{let ok=0;$$("#t3 tbody tr").forEach((tr,i)=>{
+  const v=$(`input[name=g${i}]:checked`);$$("td",tr).forEach(c=>c.classList.remove("ok","bad"));
+  const right=v&&v.value===tr.dataset.a;ok+=right?1:0;
+  const cell=v?v.closest("td"):$$("td",tr)[0];cell.classList.add(right?"ok":"bad");
+});say($("#a3"),ok,G.length)};
+$("#a3 .re").onclick=()=>{$$("#a3 input").forEach(i=>i.checked=false);$$("#t3 td").forEach(c=>c.classList.remove("ok","bad"));$("#a3 .msg").textContent=""};
+
+/* ---- 4: προτάσεις (ανοιχτή επιλογή· δεκτές οι σχετικές) ---- */
+const P=[
+ ["Ζώα Ελλάδας",[["Υδρόβια ζώα της Ελλάδας",1],["Ενδημικά ζώα της Ελλάδας",1],["Ζώα της Αφρικής",0]],"Η Αφρική δεν έχει σχέση με την Ελλάδα."],
+ ["Βυζαντινή Αυτοκρατορία",[["Βυζαντινή Αυτοκρατορία – εικόνες",1],["Βυζαντινή μουσική",0],["Βυζαντινή Αυτοκρατορία – περίληψη",1]],"Η «Βυζαντινή μουσική» είναι άλλο θέμα."],
+ ["Έλληνες ολυμπιονίκες",[["Έλληνες ολυμπιονίκες – βίντεο",1],["Έλληνες ηθοποιοί",0],["Ολυμπιακά αθλήματα",0]],"Οι «Έλληνες ηθοποιοί» και τα «Ολυμπιακά αθλήματα» δεν ψάχνουν τους ολυμπιονίκες."]];
+P.forEach((p,i)=>{
+  const b=document.createElement("div");b.className="box";
+  b.innerHTML=`<div class="q">🔍 ${p[0]}</div>`+p[1].map((s,k)=>`<button class="sg" aria-pressed="false" data-k="${k}">${s[0]}</button>`).join("")+`<p class="fb"></p>`;
+  $$(".sg",b).forEach(btn=>btn.onclick=()=>{$$(".sg",b).forEach(x=>x.setAttribute("aria-pressed",x===btn));b.classList.remove("ok","bad");$(".fb",b).textContent=""});
+  $("#l4").append(b);
+});
+$("#a4 .go").onclick=()=>{let ok=0;$$("#l4 .box").forEach((b,i)=>{
+  const sel=$(".sg[aria-pressed=true]",b);
+  const right=sel&&P[i][1][sel.dataset.k][1]===1;ok+=mark(b,right);
+  $(".fb",b).textContent=!sel?"Διάλεξε μία πρόταση.":right?"Σωστά! Είναι σχετική με την αναζήτησή σου.":P[i][2]+" Δοκίμασε άλλη.";
+});say($("#a4"),ok,P.length)};
+$("#a4 .re").onclick=()=>{$$("#a4 .sg").forEach(x=>x.setAttribute("aria-pressed","false"));$$("#a4 .fb").forEach(f=>f.textContent="");clear($("#a4"))};
+
+/* ---- 5 ---- */
+$("#pr").onclick=()=>print();
+</script>
+</body>
+</html>
